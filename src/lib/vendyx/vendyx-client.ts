@@ -37,7 +37,10 @@ export const vendyxFetch = async <R, V>(
   const { data, errors } = (await response.json()) as GraphqlResponse<R>;
 
   const unauthorizedError = errors?.find(error => error.extensions?.code === 'UNAUTHORIZED');
-  if (unauthorizedError) throw new VendyxUnauthorizedError(unauthorizedError.message);
+
+  if (unauthorizedError && accessToken) {
+    throw new VendyxUnauthorizedError(unauthorizedError.message);
+  }
 
   if (errors?.length || !data) {
     throw new Error(errors?.map(error => error.message).join('\n') ?? 'Vendyx returned no data');

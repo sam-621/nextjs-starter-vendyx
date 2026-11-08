@@ -35,6 +35,8 @@ Single Next.js app (App Router, Cache Components, Tailwind v4). Commands run fro
 
 Copy `.env.example` to `.env.local`.
 
+They're validated with zod when the server starts (`src/instrumentation.ts`) and when the build loads them: a missing or malformed variable stops it with a message naming it. The Vendyx ones are validated in `src/lib/vendyx/vendyx-config.ts` and `SITE_URL` in `src/shared/utils/site-url.ts`; a new variable is added to the schema of the file that reads it.
+
 | Variable | What for |
 |----------|----------|
 | `VENDYX_API_URL` | Vendyx API. `https://api.vendyx.so` by default. |

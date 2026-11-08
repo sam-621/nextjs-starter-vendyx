@@ -4,7 +4,7 @@ What the template sets up for search engines and link previews, and what each pr
 
 ## Source of truth
 
-- The shop's public URL is the `SITE_URL` environment variable (for example `https://tienda.com`), read in `src/shared/utils/site-url.ts`. It's fixed on purpose: canonical URLs, the sitemap and Open Graph must not change if someone edits the shop in Vendyx, and they can't come from the request's host (that would make every page dynamic and let each domain variant claim to be canonical). Without it, it falls back to `http://localhost:3001`.
+- The shop's public URL is the `SITE_URL` environment variable (for example `https://tienda.com`), read in `src/shared/utils/site-url.ts`. It's fixed on purpose: canonical URLs, the sitemap and Open Graph must not change if someone edits the shop in Vendyx, and they can't come from the request's host (that would make every page dynamic and let each domain variant claim to be canonical). It's required in production (`yarn build` fails without it); in development it falls back to `http://localhost:3001`.
 - The shop's name comes from `getShop()`, configured in the Vendyx admin.
 - Product and collection descriptions are HTML (Vendyx's editor). `toPlainText` turns them into text for meta descriptions and JSON-LD.
 

@@ -128,8 +128,8 @@ src/lib/vendyx/
 └── types.ts             re-exports the generated types
 ```
 
-- `vendyx-config.ts` is the only file that reads `process.env` for Vendyx. The API key never reaches the client and never uses the `NEXT_PUBLIC_` prefix.
-- `vendyxFetch(OPERATION, variables, { accessToken })` sends `x_lune_shop_id`, `x_lune_storefront_api_key`, `x_lune_storefront_locale` (if set) and `Authorization: Bearer <token>` when there's a customer. It doesn't read cookies, so it can run inside `'use cache'`. It throws `VendyxUnauthorizedError` when Vendyx answers `UNAUTHORIZED` (invalid or expired customer token) and a plain `Error` on any other HTTP or GraphQL error.
+- `vendyx-config.ts` is the only file that reads `process.env` for Vendyx. It validates the variables with zod when it loads, so a missing shop id or API key stops the build or the server with a clear message. The API key never reaches the client and never uses the `NEXT_PUBLIC_` prefix.
+- `vendyxFetch(OPERATION, variables, { accessToken })` sends `x_lune_shop_id`, `x_lune_storefront_api_key`, `x_lune_storefront_locale` (if set) and `Authorization: Bearer <token>` when there's a customer. It doesn't read cookies, so it can run inside `'use cache'`. It throws `VendyxUnauthorizedError` when Vendyx answers `UNAUTHORIZED` to a request that carried a customer token (invalid or expired session). Any other error, including `UNAUTHORIZED` without a token (a bad API key), is a plain `Error`, so a misconfigured shop never looks like a signed-out customer.
 - `yarn gen:types` reads the schema from the hosted API (`VENDYX_API_URL`, production by default): nothing needs to run locally. Run it after adding or changing an operation.
 - Each operation selects only what the storefront uses. The fragment is the DTO: components receive `ProductCardFragment`, `CartFragment`... imported from `@/lib/vendyx/types`, never a full API type.
 - Fragment masking is off: a fragment's fields are read directly from the response.
