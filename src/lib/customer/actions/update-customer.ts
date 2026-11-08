@@ -3,7 +3,8 @@
 import { refresh } from 'next/cache';
 import { z } from 'zod';
 
-import { getCustomerError } from '@/lib/vendyx/errors/customer-errors';
+import { getCustomerError, SESSION_EXPIRED_ERROR } from '@/lib/vendyx/errors/customer-errors';
+import { VendyxUnauthorizedError } from '@/lib/vendyx/errors/vendyx-errors';
 import { UPDATE_CUSTOMER_MUTATION } from '@/lib/vendyx/operations/customer-operations';
 import type { CustomerErrorCode } from '@/lib/vendyx/types';
 import { vendyxFetch } from '@/lib/vendyx/vendyx-client';
@@ -11,14 +12,14 @@ import { GENERIC_ERROR, INVALID_INPUT_ERROR } from '@/shared/constants/errors';
 import type { ActionResult } from '@/shared/types/action-result';
 import { getFormValues } from '@/shared/utils/form-data-utils';
 
-import { getCustomerToken } from '../data/customer-token';
+import { deleteCustomerToken, getCustomerToken } from '../utils/customer-token-utils';
 
 export const updateCustomer = async (
   _prevState: ActionResult<CustomerErrorCode> | null,
   formData: FormData
 ): Promise<ActionResult<CustomerErrorCode>> => {
   const accessToken = await getCustomerToken();
-  if (!accessToken) return { isSuccess: false, error: GENERIC_ERROR };
+  if (!accessToken) return { isSuccess: false, error: SESSION_EXPIRED_ERROR };
 
   const parsed = Schema.safeParse(getFormValues(formData));
   if (!parsed.success) return { isSuccess: false, error: INVALID_INPUT_ERROR };
@@ -36,6 +37,11 @@ export const updateCustomer = async (
     refresh();
     return { isSuccess: true };
   } catch (error) {
+    if (error instanceof VendyxUnauthorizedError) {
+      await deleteCustomerToken();
+      return { isSuccess: false, error: SESSION_EXPIRED_ERROR };
+    }
+
     console.error(error);
     return { isSuccess: false, error: GENERIC_ERROR };
   }

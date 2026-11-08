@@ -11,7 +11,7 @@ import { GENERIC_ERROR, INVALID_INPUT_ERROR } from '@/shared/constants/errors';
 import type { ActionResult } from '@/shared/types/action-result';
 import { getFormValues } from '@/shared/utils/form-data-utils';
 
-import { getCartId } from '../data/cart-id';
+import { getCartId } from '../utils/cart-id-utils';
 
 export const applyDiscountCode = async (
   _prevState: ActionResult<CartErrorCode> | null,

@@ -10,8 +10,13 @@ const MESSAGES: Partial<Record<CustomerErrorCode, string>> = {
   CUSTOMER_NOT_FOUND: 'No encontramos una cuenta con ese correo.',
   INVALID_ACCESS_TOKEN: 'Tu sesión expiró. Inicia sesión de nuevo.',
   INVALID_PHONE_NUMBER: 'Ingresa un teléfono válido.',
-  PHONE_NUMBER_ALREADY_EXISTS: 'Ya existe una cuenta con ese teléfono.'
+  PHONE_NUMBER_ALREADY_EXISTS: 'Ya existe una cuenta con ese teléfono.',
+  INVALID_OAUTH_TOKEN: 'No pudimos iniciar sesión con Google. Intenta de nuevo.',
+  INVALID_PASSWORD_TOKEN: 'El enlace para cambiar tu contraseña expiró. Pide uno nuevo.',
+  PASSWORDS_DO_NOT_MATCH: 'Las contraseñas no coinciden.'
 };
+
+export const SESSION_EXPIRED_ERROR = 'Tu sesión expiró. Inicia sesión de nuevo.';
 
 export const getCustomerError = (code: CustomerErrorCode) => ({
   error: MESSAGES[code] ?? GENERIC_ERROR,

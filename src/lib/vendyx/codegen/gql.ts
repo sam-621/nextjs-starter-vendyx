@@ -21,6 +21,10 @@ type Documents = {
   '\n  mutation RemoveCartItem($itemId: ID!) {\n    removeCartItem(itemId: $itemId) {\n      cart {\n        id\n      }\n      apiErrors {\n        code\n        message\n      }\n    }\n  }\n': typeof types.RemoveCartItemDocument;
   '\n  mutation AddDiscountCodeToCart($cartId: ID!, $code: String!) {\n    addDiscountCodeToCart(cartId: $cartId, code: $code) {\n      cart {\n        id\n      }\n      apiErrors {\n        code\n        message\n      }\n    }\n  }\n': typeof types.AddDiscountCodeToCartDocument;
   '\n  mutation AddCustomerToCart($cartId: ID!, $input: AddCustomerToCartInput!) {\n    addCustomerToCart(cartId: $cartId, input: $input) {\n      cart {\n        id\n      }\n      apiErrors {\n        code\n        message\n      }\n    }\n  }\n': typeof types.AddCustomerToCartDocument;
+  '\n  fragment ProductCard on Product {\n    id\n    name\n    slug\n    minSalePrice\n    maxSalePrice\n    assets(input: { take: 1 }) {\n      items {\n        id\n        source\n      }\n    }\n    variants(input: { take: 1 }) {\n      items {\n        id\n        stock\n        effectiveSalePrice\n        effectiveComparisonPrice\n      }\n    }\n  }\n': typeof types.ProductCardFragmentDoc;
+  '\n  fragment ProductDetails on Product {\n    id\n    name\n    slug\n    description\n    minSalePrice\n    maxSalePrice\n    assets {\n      items {\n        id\n        source\n      }\n    }\n    options {\n      id\n      name\n      values {\n        id\n        name\n      }\n    }\n    variants {\n      items {\n        id\n        sku\n        stock\n        effectiveSalePrice\n        effectiveComparisonPrice\n        optionValues {\n          id\n          name\n        }\n        assets {\n          items {\n            id\n            source\n          }\n        }\n      }\n    }\n  }\n': typeof types.ProductDetailsFragmentDoc;
+  '\n  query GetProducts($input: ProductListInput) {\n    products(input: $input) {\n      count\n      items {\n        ...ProductCard\n      }\n    }\n  }\n': typeof types.GetProductsDocument;
+  '\n  query GetProduct($slug: String!) {\n    product(slug: $slug) {\n      ...ProductDetails\n    }\n  }\n': typeof types.GetProductDocument;
   '\n  fragment CollectionCard on Collection {\n    id\n    name\n    slug\n    description\n    assets(input: { take: 1 }) {\n      items {\n        id\n        source\n      }\n    }\n  }\n': typeof types.CollectionCardFragmentDoc;
   '\n  query GetCollections($input: CollectionListInput) {\n    collections(input: $input) {\n      count\n      items {\n        ...CollectionCard\n      }\n    }\n  }\n': typeof types.GetCollectionsDocument;
   '\n  query GetCollection($slug: String!, $products: ProductListInput) {\n    collection(slug: $slug) {\n      ...CollectionCard\n      products(input: $products) {\n        count\n        items {\n          ...ProductCard\n        }\n      }\n    }\n  }\n': typeof types.GetCollectionDocument;
@@ -31,10 +35,9 @@ type Documents = {
   '\n  mutation SignIn($email: String!, $password: String!) {\n    signInCustomerWithCredentials(email: $email, password: $password) {\n      accessToken\n      apiErrors {\n        code\n        message\n      }\n    }\n  }\n': typeof types.SignInDocument;
   '\n  mutation SignUp($input: SignUpWithCredentialsInput!) {\n    signUpCustomerWithCredentials(input: $input) {\n      accessToken\n      apiErrors {\n        code\n        message\n      }\n    }\n  }\n': typeof types.SignUpDocument;
   '\n  mutation UpdateCustomer($input: UpdateCustomerInput!) {\n    updateCustomer(input: $input) {\n      customer {\n        ...Customer\n      }\n      apiErrors {\n        code\n        message\n      }\n    }\n  }\n': typeof types.UpdateCustomerDocument;
-  '\n  fragment ProductCard on Product {\n    id\n    name\n    slug\n    minSalePrice\n    maxSalePrice\n    assets(input: { take: 1 }) {\n      items {\n        id\n        source\n      }\n    }\n    variants(input: { take: 1 }) {\n      items {\n        id\n        stock\n        effectiveSalePrice\n        effectiveComparisonPrice\n      }\n    }\n  }\n': typeof types.ProductCardFragmentDoc;
-  '\n  fragment ProductDetails on Product {\n    id\n    name\n    slug\n    description\n    minSalePrice\n    maxSalePrice\n    assets {\n      items {\n        id\n        source\n      }\n    }\n    options {\n      id\n      name\n      values {\n        id\n        name\n      }\n    }\n    variants {\n      items {\n        id\n        sku\n        stock\n        effectiveSalePrice\n        effectiveComparisonPrice\n        optionValues {\n          id\n          name\n        }\n        assets {\n          items {\n            id\n            source\n          }\n        }\n      }\n    }\n  }\n': typeof types.ProductDetailsFragmentDoc;
-  '\n  query GetProducts($input: ProductListInput) {\n    products(input: $input) {\n      count\n      items {\n        ...ProductCard\n      }\n    }\n  }\n': typeof types.GetProductsDocument;
-  '\n  query GetProduct($slug: String!) {\n    product(slug: $slug) {\n      ...ProductDetails\n    }\n  }\n': typeof types.GetProductDocument;
+  '\n  mutation SignInWithGoogle($token: String!) {\n    signInCustomerWithOauth(provider: GOOGLE, input: { token: $token }) {\n      accessToken\n      apiErrors {\n        code\n        message\n      }\n    }\n  }\n': typeof types.SignInWithGoogleDocument;
+  '\n  mutation RequestPasswordReset($email: String!, $redirectUrl: String!) {\n    requestPasswordReset(email: $email, input: { redirectUrl: $redirectUrl }) {\n      success\n      apiErrors {\n        code\n        message\n      }\n    }\n  }\n': typeof types.RequestPasswordResetDocument;
+  '\n  mutation ResetPassword($token: String!, $newPassword: String!) {\n    resetPassword(token: $token, newPassword: $newPassword) {\n      success\n      apiErrors {\n        code\n        message\n      }\n    }\n  }\n': typeof types.ResetPasswordDocument;
   '\n  fragment Shop on Shop {\n    id\n    name\n    slug\n    email\n    phoneNumber\n    logo\n    socials {\n      facebook\n      instagram\n      twitter\n    }\n  }\n': typeof types.ShopFragmentDoc;
   '\n  query GetShop($id: ID!) {\n    shop(id: $id) {\n      ...Shop\n    }\n  }\n': typeof types.GetShopDocument;
 };
@@ -55,6 +58,14 @@ const documents: Documents = {
     types.AddDiscountCodeToCartDocument,
   '\n  mutation AddCustomerToCart($cartId: ID!, $input: AddCustomerToCartInput!) {\n    addCustomerToCart(cartId: $cartId, input: $input) {\n      cart {\n        id\n      }\n      apiErrors {\n        code\n        message\n      }\n    }\n  }\n':
     types.AddCustomerToCartDocument,
+  '\n  fragment ProductCard on Product {\n    id\n    name\n    slug\n    minSalePrice\n    maxSalePrice\n    assets(input: { take: 1 }) {\n      items {\n        id\n        source\n      }\n    }\n    variants(input: { take: 1 }) {\n      items {\n        id\n        stock\n        effectiveSalePrice\n        effectiveComparisonPrice\n      }\n    }\n  }\n':
+    types.ProductCardFragmentDoc,
+  '\n  fragment ProductDetails on Product {\n    id\n    name\n    slug\n    description\n    minSalePrice\n    maxSalePrice\n    assets {\n      items {\n        id\n        source\n      }\n    }\n    options {\n      id\n      name\n      values {\n        id\n        name\n      }\n    }\n    variants {\n      items {\n        id\n        sku\n        stock\n        effectiveSalePrice\n        effectiveComparisonPrice\n        optionValues {\n          id\n          name\n        }\n        assets {\n          items {\n            id\n            source\n          }\n        }\n      }\n    }\n  }\n':
+    types.ProductDetailsFragmentDoc,
+  '\n  query GetProducts($input: ProductListInput) {\n    products(input: $input) {\n      count\n      items {\n        ...ProductCard\n      }\n    }\n  }\n':
+    types.GetProductsDocument,
+  '\n  query GetProduct($slug: String!) {\n    product(slug: $slug) {\n      ...ProductDetails\n    }\n  }\n':
+    types.GetProductDocument,
   '\n  fragment CollectionCard on Collection {\n    id\n    name\n    slug\n    description\n    assets(input: { take: 1 }) {\n      items {\n        id\n        source\n      }\n    }\n  }\n':
     types.CollectionCardFragmentDoc,
   '\n  query GetCollections($input: CollectionListInput) {\n    collections(input: $input) {\n      count\n      items {\n        ...CollectionCard\n      }\n    }\n  }\n':
@@ -74,14 +85,12 @@ const documents: Documents = {
     types.SignUpDocument,
   '\n  mutation UpdateCustomer($input: UpdateCustomerInput!) {\n    updateCustomer(input: $input) {\n      customer {\n        ...Customer\n      }\n      apiErrors {\n        code\n        message\n      }\n    }\n  }\n':
     types.UpdateCustomerDocument,
-  '\n  fragment ProductCard on Product {\n    id\n    name\n    slug\n    minSalePrice\n    maxSalePrice\n    assets(input: { take: 1 }) {\n      items {\n        id\n        source\n      }\n    }\n    variants(input: { take: 1 }) {\n      items {\n        id\n        stock\n        effectiveSalePrice\n        effectiveComparisonPrice\n      }\n    }\n  }\n':
-    types.ProductCardFragmentDoc,
-  '\n  fragment ProductDetails on Product {\n    id\n    name\n    slug\n    description\n    minSalePrice\n    maxSalePrice\n    assets {\n      items {\n        id\n        source\n      }\n    }\n    options {\n      id\n      name\n      values {\n        id\n        name\n      }\n    }\n    variants {\n      items {\n        id\n        sku\n        stock\n        effectiveSalePrice\n        effectiveComparisonPrice\n        optionValues {\n          id\n          name\n        }\n        assets {\n          items {\n            id\n            source\n          }\n        }\n      }\n    }\n  }\n':
-    types.ProductDetailsFragmentDoc,
-  '\n  query GetProducts($input: ProductListInput) {\n    products(input: $input) {\n      count\n      items {\n        ...ProductCard\n      }\n    }\n  }\n':
-    types.GetProductsDocument,
-  '\n  query GetProduct($slug: String!) {\n    product(slug: $slug) {\n      ...ProductDetails\n    }\n  }\n':
-    types.GetProductDocument,
+  '\n  mutation SignInWithGoogle($token: String!) {\n    signInCustomerWithOauth(provider: GOOGLE, input: { token: $token }) {\n      accessToken\n      apiErrors {\n        code\n        message\n      }\n    }\n  }\n':
+    types.SignInWithGoogleDocument,
+  '\n  mutation RequestPasswordReset($email: String!, $redirectUrl: String!) {\n    requestPasswordReset(email: $email, input: { redirectUrl: $redirectUrl }) {\n      success\n      apiErrors {\n        code\n        message\n      }\n    }\n  }\n':
+    types.RequestPasswordResetDocument,
+  '\n  mutation ResetPassword($token: String!, $newPassword: String!) {\n    resetPassword(token: $token, newPassword: $newPassword) {\n      success\n      apiErrors {\n        code\n        message\n      }\n    }\n  }\n':
+    types.ResetPasswordDocument,
   '\n  fragment Shop on Shop {\n    id\n    name\n    slug\n    email\n    phoneNumber\n    logo\n    socials {\n      facebook\n      instagram\n      twitter\n    }\n  }\n':
     types.ShopFragmentDoc,
   '\n  query GetShop($id: ID!) {\n    shop(id: $id) {\n      ...Shop\n    }\n  }\n':
@@ -136,6 +145,30 @@ export function graphql(
 export function graphql(
   source: '\n  mutation AddCustomerToCart($cartId: ID!, $input: AddCustomerToCartInput!) {\n    addCustomerToCart(cartId: $cartId, input: $input) {\n      cart {\n        id\n      }\n      apiErrors {\n        code\n        message\n      }\n    }\n  }\n'
 ): typeof import('./graphql').AddCustomerToCartDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  fragment ProductCard on Product {\n    id\n    name\n    slug\n    minSalePrice\n    maxSalePrice\n    assets(input: { take: 1 }) {\n      items {\n        id\n        source\n      }\n    }\n    variants(input: { take: 1 }) {\n      items {\n        id\n        stock\n        effectiveSalePrice\n        effectiveComparisonPrice\n      }\n    }\n  }\n'
+): typeof import('./graphql').ProductCardFragmentDoc;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  fragment ProductDetails on Product {\n    id\n    name\n    slug\n    description\n    minSalePrice\n    maxSalePrice\n    assets {\n      items {\n        id\n        source\n      }\n    }\n    options {\n      id\n      name\n      values {\n        id\n        name\n      }\n    }\n    variants {\n      items {\n        id\n        sku\n        stock\n        effectiveSalePrice\n        effectiveComparisonPrice\n        optionValues {\n          id\n          name\n        }\n        assets {\n          items {\n            id\n            source\n          }\n        }\n      }\n    }\n  }\n'
+): typeof import('./graphql').ProductDetailsFragmentDoc;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  query GetProducts($input: ProductListInput) {\n    products(input: $input) {\n      count\n      items {\n        ...ProductCard\n      }\n    }\n  }\n'
+): typeof import('./graphql').GetProductsDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  query GetProduct($slug: String!) {\n    product(slug: $slug) {\n      ...ProductDetails\n    }\n  }\n'
+): typeof import('./graphql').GetProductDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -200,26 +233,20 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  fragment ProductCard on Product {\n    id\n    name\n    slug\n    minSalePrice\n    maxSalePrice\n    assets(input: { take: 1 }) {\n      items {\n        id\n        source\n      }\n    }\n    variants(input: { take: 1 }) {\n      items {\n        id\n        stock\n        effectiveSalePrice\n        effectiveComparisonPrice\n      }\n    }\n  }\n'
-): typeof import('./graphql').ProductCardFragmentDoc;
+  source: '\n  mutation SignInWithGoogle($token: String!) {\n    signInCustomerWithOauth(provider: GOOGLE, input: { token: $token }) {\n      accessToken\n      apiErrors {\n        code\n        message\n      }\n    }\n  }\n'
+): typeof import('./graphql').SignInWithGoogleDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  fragment ProductDetails on Product {\n    id\n    name\n    slug\n    description\n    minSalePrice\n    maxSalePrice\n    assets {\n      items {\n        id\n        source\n      }\n    }\n    options {\n      id\n      name\n      values {\n        id\n        name\n      }\n    }\n    variants {\n      items {\n        id\n        sku\n        stock\n        effectiveSalePrice\n        effectiveComparisonPrice\n        optionValues {\n          id\n          name\n        }\n        assets {\n          items {\n            id\n            source\n          }\n        }\n      }\n    }\n  }\n'
-): typeof import('./graphql').ProductDetailsFragmentDoc;
+  source: '\n  mutation RequestPasswordReset($email: String!, $redirectUrl: String!) {\n    requestPasswordReset(email: $email, input: { redirectUrl: $redirectUrl }) {\n      success\n      apiErrors {\n        code\n        message\n      }\n    }\n  }\n'
+): typeof import('./graphql').RequestPasswordResetDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  query GetProducts($input: ProductListInput) {\n    products(input: $input) {\n      count\n      items {\n        ...ProductCard\n      }\n    }\n  }\n'
-): typeof import('./graphql').GetProductsDocument;
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(
-  source: '\n  query GetProduct($slug: String!) {\n    product(slug: $slug) {\n      ...ProductDetails\n    }\n  }\n'
-): typeof import('./graphql').GetProductDocument;
+  source: '\n  mutation ResetPassword($token: String!, $newPassword: String!) {\n    resetPassword(token: $token, newPassword: $newPassword) {\n      success\n      apiErrors {\n        code\n        message\n      }\n    }\n  }\n'
+): typeof import('./graphql').ResetPasswordDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

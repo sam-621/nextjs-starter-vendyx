@@ -1,6 +1,7 @@
 import 'server-only';
 
 import type { TypedDocumentString } from './codegen/graphql';
+import { VendyxUnauthorizedError } from './errors/vendyx-errors';
 import { VendyxConfig } from './vendyx-config';
 
 type Options = {
@@ -9,7 +10,7 @@ type Options = {
 
 type GraphqlResponse<R> = {
   data?: R;
-  errors?: { message: string }[];
+  errors?: { message: string; extensions?: { code?: string } }[];
 };
 
 export const vendyxFetch = async <R, V>(
@@ -34,6 +35,9 @@ export const vendyxFetch = async <R, V>(
   }
 
   const { data, errors } = (await response.json()) as GraphqlResponse<R>;
+
+  const unauthorizedError = errors?.find(error => error.extensions?.code === 'UNAUTHORIZED');
+  if (unauthorizedError) throw new VendyxUnauthorizedError(unauthorizedError.message);
 
   if (errors?.length || !data) {
     throw new Error(errors?.map(error => error.message).join('\n') ?? 'Vendyx returned no data');

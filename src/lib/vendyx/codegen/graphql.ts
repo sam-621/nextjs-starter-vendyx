@@ -316,6 +316,99 @@ export type AddCustomerToCartMutation = {
   };
 };
 
+export type ProductCardFragment = {
+  id: string;
+  name: string;
+  slug: string;
+  minSalePrice: number;
+  maxSalePrice: number;
+  assets: { items: Array<{ id: string; source: string }> };
+  variants: {
+    items: Array<{
+      id: string;
+      stock: number;
+      effectiveSalePrice: number;
+      effectiveComparisonPrice: number | null;
+    }>;
+  };
+};
+
+export type ProductDetailsFragment = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  minSalePrice: number;
+  maxSalePrice: number;
+  assets: { items: Array<{ id: string; source: string }> };
+  options: Array<{ id: string; name: string; values: Array<{ id: string; name: string }> }>;
+  variants: {
+    items: Array<{
+      id: string;
+      sku: string | null;
+      stock: number;
+      effectiveSalePrice: number;
+      effectiveComparisonPrice: number | null;
+      optionValues: Array<{ id: string; name: string }>;
+      assets: { items: Array<{ id: string; source: string }> };
+    }>;
+  };
+};
+
+export type GetProductsQueryVariables = Exact<{
+  input?: ProductListInput | null | undefined;
+}>;
+
+export type GetProductsQuery = {
+  products: {
+    count: number;
+    items: Array<{
+      id: string;
+      name: string;
+      slug: string;
+      minSalePrice: number;
+      maxSalePrice: number;
+      assets: { items: Array<{ id: string; source: string }> };
+      variants: {
+        items: Array<{
+          id: string;
+          stock: number;
+          effectiveSalePrice: number;
+          effectiveComparisonPrice: number | null;
+        }>;
+      };
+    }>;
+  };
+};
+
+export type GetProductQueryVariables = Exact<{
+  slug: string;
+}>;
+
+export type GetProductQuery = {
+  product: {
+    id: string;
+    name: string;
+    slug: string;
+    description: string | null;
+    minSalePrice: number;
+    maxSalePrice: number;
+    assets: { items: Array<{ id: string; source: string }> };
+    options: Array<{ id: string; name: string; values: Array<{ id: string; name: string }> }>;
+    variants: {
+      items: Array<{
+        id: string;
+        sku: string | null;
+        stock: number;
+        effectiveSalePrice: number;
+        effectiveComparisonPrice: number | null;
+        optionValues: Array<{ id: string; name: string }>;
+        assets: { items: Array<{ id: string; source: string }> };
+      }>;
+    };
+  } | null;
+};
+
 export type CollectionCardFragment = {
   id: string;
   name: string;
@@ -464,97 +557,39 @@ export type UpdateCustomerMutation = {
   };
 };
 
-export type ProductCardFragment = {
-  id: string;
-  name: string;
-  slug: string;
-  minSalePrice: number;
-  maxSalePrice: number;
-  assets: { items: Array<{ id: string; source: string }> };
-  variants: {
-    items: Array<{
-      id: string;
-      stock: number;
-      effectiveSalePrice: number;
-      effectiveComparisonPrice: number | null;
-    }>;
-  };
-};
-
-export type ProductDetailsFragment = {
-  id: string;
-  name: string;
-  slug: string;
-  description: string | null;
-  minSalePrice: number;
-  maxSalePrice: number;
-  assets: { items: Array<{ id: string; source: string }> };
-  options: Array<{ id: string; name: string; values: Array<{ id: string; name: string }> }>;
-  variants: {
-    items: Array<{
-      id: string;
-      sku: string | null;
-      stock: number;
-      effectiveSalePrice: number;
-      effectiveComparisonPrice: number | null;
-      optionValues: Array<{ id: string; name: string }>;
-      assets: { items: Array<{ id: string; source: string }> };
-    }>;
-  };
-};
-
-export type GetProductsQueryVariables = Exact<{
-  input?: ProductListInput | null | undefined;
+export type SignInWithGoogleMutationVariables = Exact<{
+  token: string;
 }>;
 
-export type GetProductsQuery = {
-  products: {
-    count: number;
-    items: Array<{
-      id: string;
-      name: string;
-      slug: string;
-      minSalePrice: number;
-      maxSalePrice: number;
-      assets: { items: Array<{ id: string; source: string }> };
-      variants: {
-        items: Array<{
-          id: string;
-          stock: number;
-          effectiveSalePrice: number;
-          effectiveComparisonPrice: number | null;
-        }>;
-      };
-    }>;
+export type SignInWithGoogleMutation = {
+  signInCustomerWithOauth: {
+    accessToken: string | null;
+    apiErrors: Array<{ code: CustomerErrorCode; message: string }>;
   };
 };
 
-export type GetProductQueryVariables = Exact<{
-  slug: string;
+export type RequestPasswordResetMutationVariables = Exact<{
+  email: string;
+  redirectUrl: string;
 }>;
 
-export type GetProductQuery = {
-  product: {
-    id: string;
-    name: string;
-    slug: string;
-    description: string | null;
-    minSalePrice: number;
-    maxSalePrice: number;
-    assets: { items: Array<{ id: string; source: string }> };
-    options: Array<{ id: string; name: string; values: Array<{ id: string; name: string }> }>;
-    variants: {
-      items: Array<{
-        id: string;
-        sku: string | null;
-        stock: number;
-        effectiveSalePrice: number;
-        effectiveComparisonPrice: number | null;
-        optionValues: Array<{ id: string; name: string }>;
-        assets: { items: Array<{ id: string; source: string }> };
-      }>;
-    };
-  } | null;
+export type RequestPasswordResetMutation = {
+  requestPasswordReset: {
+    success: boolean;
+    apiErrors: Array<{ code: CustomerErrorCode; message: string }>;
+  };
+};
+
+export type ResetPasswordMutationVariables = Exact<{
+  token: string;
+  newPassword: string;
+}>;
+
+export type ResetPasswordMutation = {
+  resetPassword: {
+    success: boolean;
+    apiErrors: Array<{ code: CustomerErrorCode; message: string }>;
+  };
 };
 
 export type ShopFragment = {
@@ -651,48 +686,6 @@ export const CartFragmentDoc = new TypedDocumentString(
     `,
   { fragmentName: 'Cart' }
 ) as unknown as TypedDocumentString<CartFragment, unknown>;
-export const CollectionCardFragmentDoc = new TypedDocumentString(
-  `
-    fragment CollectionCard on Collection {
-  id
-  name
-  slug
-  description
-  assets(input: { take: 1 }) {
-    items {
-      id
-      source
-    }
-  }
-}
-    `,
-  { fragmentName: 'CollectionCard' }
-) as unknown as TypedDocumentString<CollectionCardFragment, unknown>;
-export const CustomerFragmentDoc = new TypedDocumentString(
-  `
-    fragment Customer on Customer {
-  id
-  firstName
-  lastName
-  email
-  phoneNumber
-}
-    `,
-  { fragmentName: 'Customer' }
-) as unknown as TypedDocumentString<CustomerFragment, unknown>;
-export const CustomerOrderFragmentDoc = new TypedDocumentString(
-  `
-    fragment CustomerOrder on Order {
-  id
-  code
-  state
-  total
-  totalQuantity
-  placedAt
-}
-    `,
-  { fragmentName: 'CustomerOrder' }
-) as unknown as TypedDocumentString<CustomerOrderFragment, unknown>;
 export const ProductCardFragmentDoc = new TypedDocumentString(
   `
     fragment ProductCard on Product {
@@ -765,6 +758,48 @@ export const ProductDetailsFragmentDoc = new TypedDocumentString(
     `,
   { fragmentName: 'ProductDetails' }
 ) as unknown as TypedDocumentString<ProductDetailsFragment, unknown>;
+export const CollectionCardFragmentDoc = new TypedDocumentString(
+  `
+    fragment CollectionCard on Collection {
+  id
+  name
+  slug
+  description
+  assets(input: { take: 1 }) {
+    items {
+      id
+      source
+    }
+  }
+}
+    `,
+  { fragmentName: 'CollectionCard' }
+) as unknown as TypedDocumentString<CollectionCardFragment, unknown>;
+export const CustomerFragmentDoc = new TypedDocumentString(
+  `
+    fragment Customer on Customer {
+  id
+  firstName
+  lastName
+  email
+  phoneNumber
+}
+    `,
+  { fragmentName: 'Customer' }
+) as unknown as TypedDocumentString<CustomerFragment, unknown>;
+export const CustomerOrderFragmentDoc = new TypedDocumentString(
+  `
+    fragment CustomerOrder on Order {
+  id
+  code
+  state
+  total
+  totalQuantity
+  placedAt
+}
+    `,
+  { fragmentName: 'CustomerOrder' }
+) as unknown as TypedDocumentString<CustomerOrderFragment, unknown>;
 export const ShopFragmentDoc = new TypedDocumentString(
   `
     fragment Shop on Shop {
@@ -918,145 +953,6 @@ export const AddCustomerToCartDocument = new TypedDocumentString(`
   AddCustomerToCartMutation,
   AddCustomerToCartMutationVariables
 >;
-export const GetCollectionsDocument = new TypedDocumentString(`
-    query GetCollections($input: CollectionListInput) {
-  collections(input: $input) {
-    count
-    items {
-      ...CollectionCard
-    }
-  }
-}
-    fragment CollectionCard on Collection {
-  id
-  name
-  slug
-  description
-  assets(input: { take: 1 }) {
-    items {
-      id
-      source
-    }
-  }
-}`) as unknown as TypedDocumentString<GetCollectionsQuery, GetCollectionsQueryVariables>;
-export const GetCollectionDocument = new TypedDocumentString(`
-    query GetCollection($slug: String!, $products: ProductListInput) {
-  collection(slug: $slug) {
-    ...CollectionCard
-    products(input: $products) {
-      count
-      items {
-        ...ProductCard
-      }
-    }
-  }
-}
-    fragment CollectionCard on Collection {
-  id
-  name
-  slug
-  description
-  assets(input: { take: 1 }) {
-    items {
-      id
-      source
-    }
-  }
-}
-fragment ProductCard on Product {
-  id
-  name
-  slug
-  minSalePrice
-  maxSalePrice
-  assets(input: { take: 1 }) {
-    items {
-      id
-      source
-    }
-  }
-  variants(input: { take: 1 }) {
-    items {
-      id
-      stock
-      effectiveSalePrice
-      effectiveComparisonPrice
-    }
-  }
-}`) as unknown as TypedDocumentString<GetCollectionQuery, GetCollectionQueryVariables>;
-export const GetCustomerDocument = new TypedDocumentString(`
-    query GetCustomer {
-  me {
-    ...Customer
-  }
-}
-    fragment Customer on Customer {
-  id
-  firstName
-  lastName
-  email
-  phoneNumber
-}`) as unknown as TypedDocumentString<GetCustomerQuery, GetCustomerQueryVariables>;
-export const GetCustomerOrdersDocument = new TypedDocumentString(`
-    query GetCustomerOrders($input: OrderListInput) {
-  me {
-    orders(input: $input) {
-      count
-      items {
-        ...CustomerOrder
-      }
-    }
-  }
-}
-    fragment CustomerOrder on Order {
-  id
-  code
-  state
-  total
-  totalQuantity
-  placedAt
-}`) as unknown as TypedDocumentString<GetCustomerOrdersQuery, GetCustomerOrdersQueryVariables>;
-export const SignInDocument = new TypedDocumentString(`
-    mutation SignIn($email: String!, $password: String!) {
-  signInCustomerWithCredentials(email: $email, password: $password) {
-    accessToken
-    apiErrors {
-      code
-      message
-    }
-  }
-}
-    `) as unknown as TypedDocumentString<SignInMutation, SignInMutationVariables>;
-export const SignUpDocument = new TypedDocumentString(`
-    mutation SignUp($input: SignUpWithCredentialsInput!) {
-  signUpCustomerWithCredentials(input: $input) {
-    accessToken
-    apiErrors {
-      code
-      message
-    }
-  }
-}
-    `) as unknown as TypedDocumentString<SignUpMutation, SignUpMutationVariables>;
-export const UpdateCustomerDocument = new TypedDocumentString(`
-    mutation UpdateCustomer($input: UpdateCustomerInput!) {
-  updateCustomer(input: $input) {
-    customer {
-      ...Customer
-    }
-    apiErrors {
-      code
-      message
-    }
-  }
-}
-    fragment Customer on Customer {
-  id
-  firstName
-  lastName
-  email
-  phoneNumber
-}`) as unknown as TypedDocumentString<UpdateCustomerMutation, UpdateCustomerMutationVariables>;
 export const GetProductsDocument = new TypedDocumentString(`
     query GetProducts($input: ProductListInput) {
   products(input: $input) {
@@ -1134,6 +1030,184 @@ export const GetProductDocument = new TypedDocumentString(`
     }
   }
 }`) as unknown as TypedDocumentString<GetProductQuery, GetProductQueryVariables>;
+export const GetCollectionsDocument = new TypedDocumentString(`
+    query GetCollections($input: CollectionListInput) {
+  collections(input: $input) {
+    count
+    items {
+      ...CollectionCard
+    }
+  }
+}
+    fragment CollectionCard on Collection {
+  id
+  name
+  slug
+  description
+  assets(input: { take: 1 }) {
+    items {
+      id
+      source
+    }
+  }
+}`) as unknown as TypedDocumentString<GetCollectionsQuery, GetCollectionsQueryVariables>;
+export const GetCollectionDocument = new TypedDocumentString(`
+    query GetCollection($slug: String!, $products: ProductListInput) {
+  collection(slug: $slug) {
+    ...CollectionCard
+    products(input: $products) {
+      count
+      items {
+        ...ProductCard
+      }
+    }
+  }
+}
+    fragment ProductCard on Product {
+  id
+  name
+  slug
+  minSalePrice
+  maxSalePrice
+  assets(input: { take: 1 }) {
+    items {
+      id
+      source
+    }
+  }
+  variants(input: { take: 1 }) {
+    items {
+      id
+      stock
+      effectiveSalePrice
+      effectiveComparisonPrice
+    }
+  }
+}
+fragment CollectionCard on Collection {
+  id
+  name
+  slug
+  description
+  assets(input: { take: 1 }) {
+    items {
+      id
+      source
+    }
+  }
+}`) as unknown as TypedDocumentString<GetCollectionQuery, GetCollectionQueryVariables>;
+export const GetCustomerDocument = new TypedDocumentString(`
+    query GetCustomer {
+  me {
+    ...Customer
+  }
+}
+    fragment Customer on Customer {
+  id
+  firstName
+  lastName
+  email
+  phoneNumber
+}`) as unknown as TypedDocumentString<GetCustomerQuery, GetCustomerQueryVariables>;
+export const GetCustomerOrdersDocument = new TypedDocumentString(`
+    query GetCustomerOrders($input: OrderListInput) {
+  me {
+    orders(input: $input) {
+      count
+      items {
+        ...CustomerOrder
+      }
+    }
+  }
+}
+    fragment CustomerOrder on Order {
+  id
+  code
+  state
+  total
+  totalQuantity
+  placedAt
+}`) as unknown as TypedDocumentString<GetCustomerOrdersQuery, GetCustomerOrdersQueryVariables>;
+export const SignInDocument = new TypedDocumentString(`
+    mutation SignIn($email: String!, $password: String!) {
+  signInCustomerWithCredentials(email: $email, password: $password) {
+    accessToken
+    apiErrors {
+      code
+      message
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<SignInMutation, SignInMutationVariables>;
+export const SignUpDocument = new TypedDocumentString(`
+    mutation SignUp($input: SignUpWithCredentialsInput!) {
+  signUpCustomerWithCredentials(input: $input) {
+    accessToken
+    apiErrors {
+      code
+      message
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<SignUpMutation, SignUpMutationVariables>;
+export const UpdateCustomerDocument = new TypedDocumentString(`
+    mutation UpdateCustomer($input: UpdateCustomerInput!) {
+  updateCustomer(input: $input) {
+    customer {
+      ...Customer
+    }
+    apiErrors {
+      code
+      message
+    }
+  }
+}
+    fragment Customer on Customer {
+  id
+  firstName
+  lastName
+  email
+  phoneNumber
+}`) as unknown as TypedDocumentString<UpdateCustomerMutation, UpdateCustomerMutationVariables>;
+export const SignInWithGoogleDocument = new TypedDocumentString(`
+    mutation SignInWithGoogle($token: String!) {
+  signInCustomerWithOauth(provider: GOOGLE, input: { token: $token }) {
+    accessToken
+    apiErrors {
+      code
+      message
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<
+  SignInWithGoogleMutation,
+  SignInWithGoogleMutationVariables
+>;
+export const RequestPasswordResetDocument = new TypedDocumentString(`
+    mutation RequestPasswordReset($email: String!, $redirectUrl: String!) {
+  requestPasswordReset(email: $email, input: { redirectUrl: $redirectUrl }) {
+    success
+    apiErrors {
+      code
+      message
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<
+  RequestPasswordResetMutation,
+  RequestPasswordResetMutationVariables
+>;
+export const ResetPasswordDocument = new TypedDocumentString(`
+    mutation ResetPassword($token: String!, $newPassword: String!) {
+  resetPassword(token: $token, newPassword: $newPassword) {
+    success
+    apiErrors {
+      code
+      message
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<ResetPasswordMutation, ResetPasswordMutationVariables>;
 export const GetShopDocument = new TypedDocumentString(`
     query GetShop($id: ID!) {
   shop(id: $id) {

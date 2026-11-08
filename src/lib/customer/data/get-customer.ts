@@ -2,10 +2,11 @@ import 'server-only';
 
 import { cache } from 'react';
 
+import { VendyxUnauthorizedError } from '@/lib/vendyx/errors/vendyx-errors';
 import { GET_CUSTOMER_QUERY } from '@/lib/vendyx/operations/customer-operations';
 import { vendyxFetch } from '@/lib/vendyx/vendyx-client';
 
-import { getCustomerToken } from './customer-token';
+import { getCustomerToken } from '../utils/customer-token-utils';
 
 export const getCustomer = cache(async () => {
   const accessToken = await getCustomerToken();
@@ -15,7 +16,8 @@ export const getCustomer = cache(async () => {
     const { me } = await vendyxFetch(GET_CUSTOMER_QUERY, {}, { accessToken });
 
     return me ?? null;
-  } catch {
-    return null;
+  } catch (error) {
+    if (error instanceof VendyxUnauthorizedError) return null;
+    throw error;
   }
 });

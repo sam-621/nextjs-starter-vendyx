@@ -38,6 +38,7 @@ Copy `.env.example` to `.env.local`.
 | `VENDYX_SHOP_ID` | The shop's id in Vendyx. |
 | `VENDYX_STOREFRONT_API_KEY` | The shop's storefront API key. Server only. |
 | `VENDYX_LOCALE` | Optional: `en`, `es` or `fr` for translated catalog content. |
+| `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | The shop's Google OAuth client ID, for `GoogleSignInButton`. The same one configured for the shop in Vendyx. |
 
 ## Features
 

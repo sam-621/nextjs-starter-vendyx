@@ -79,3 +79,39 @@ export const UPDATE_CUSTOMER_MUTATION = graphql(`
     }
   }
 `);
+
+export const SIGN_IN_WITH_GOOGLE_MUTATION = graphql(`
+  mutation SignInWithGoogle($token: String!) {
+    signInCustomerWithOauth(provider: GOOGLE, input: { token: $token }) {
+      accessToken
+      apiErrors {
+        code
+        message
+      }
+    }
+  }
+`);
+
+export const REQUEST_PASSWORD_RESET_MUTATION = graphql(`
+  mutation RequestPasswordReset($email: String!, $redirectUrl: String!) {
+    requestPasswordReset(email: $email, input: { redirectUrl: $redirectUrl }) {
+      success
+      apiErrors {
+        code
+        message
+      }
+    }
+  }
+`);
+
+export const RESET_PASSWORD_MUTATION = graphql(`
+  mutation ResetPassword($token: String!, $newPassword: String!) {
+    resetPassword(token: $token, newPassword: $newPassword) {
+      success
+      apiErrors {
+        code
+        message
+      }
+    }
+  }
+`);

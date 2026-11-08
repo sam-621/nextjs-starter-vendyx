@@ -10,7 +10,7 @@ import { GENERIC_ERROR, INVALID_INPUT_ERROR } from '@/shared/constants/errors';
 import type { ActionResult } from '@/shared/types/action-result';
 import { getFormValues } from '@/shared/utils/form-data-utils';
 
-import { setCustomerToken } from '../data/customer-token';
+import { setCustomerToken } from '../utils/customer-token-utils';
 
 export const signUp = async (
   _prevState: ActionResult<CustomerErrorCode> | null,

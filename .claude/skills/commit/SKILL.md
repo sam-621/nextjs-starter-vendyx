@@ -20,7 +20,7 @@ disable-model-invocation: true
 
 ## Scope
 
-- The scope is the module in `src/lib/<module>`: `product`, `cart`, `customer`, `vendyx`...
+- The scope is the module in `src/lib/<module>`: `catalog`, `cart`, `customer`, `vendyx`...
 - No scope when the change spans several modules or is **only** about the harness (`features/`, `.claude/`, `docs/`, `CLAUDE.md`): `docs: add features folder`.
 
 ## Steps
@@ -36,7 +36,7 @@ disable-model-invocation: true
 
 ```
 feat(cart): can update line quantity
-fix(product): show variant price on product page
+fix(catalog): show variant price on product page
 refactor(vendyx): move storefront client to server-only module
 docs: add features folder
 ```

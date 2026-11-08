@@ -19,12 +19,12 @@
 
 | What | Rule | Example |
 |------|------|---------|
-| Files and folders | kebab-case | `product-gallery/gallery-thumbnail.tsx` |
-| Page | `<Name>Page` in `pages/<name>-page.tsx` | `ProductPage` |
+| Files and folders | kebab-case; private folders in `src/app` start with `_` | `_components/product-gallery/gallery-thumbnail.tsx` |
+| Page | `page.tsx` in its route folder, `export default function Page` | `app/(shop)/cart/page.tsx` |
 | Component | PascalCase, named export | `AddToCartButton` |
-| Hook | `use<Thing>` in `hooks/use-<thing>.ts` | `useVariantSelection` |
+| Hook | `use<Thing>` in `_hooks/use-<thing>.ts` or `shared/hooks/` | `useVariantSelection` |
 | Data function | `get<Thing>` in `data/get-<thing>.ts` | `getProduct` |
-| Server Action | verb + noun in `actions/<verb>-<noun>.ts` | `addToCart` in `add-to-cart.ts` |
+| Server Action | verb + noun in `actions/<verb>-<noun>.ts` or `_actions/` | `addToCart` in `add-to-cart.ts` |
 | Cache tags | `<Module>CacheTags` | `CartCacheTags.Cart` |
 | Vendyx operation | SCREAMING_SNAKE_CASE with `_QUERY`, `_MUTATION` or `_FRAGMENT` suffix | `GET_PRODUCT_QUERY` |
 | Utils | `<topic>-utils.ts` | `price-utils.ts` |

@@ -6,34 +6,40 @@ The rules here follow the Next.js docs bundled in `node_modules/next/dist/docs/`
 
 ## Structure
 
+Two layers: `src/lib` holds the logic, split by domain, and `src/app` holds the UI, split by screen.
+
 ```
 src/
-├── app/            routes only: layout, page, loading, error, not-found and route handlers
-├── lib/
-│   ├── vendyx/     Vendyx storefront API layer, server only (shared by every module)
-│   └── <module>/   one folder per domain: product, collection, cart, customer, checkout...
-├── shared/         components, hooks and utils shared by several modules
-└── proxy.ts        optional; only for redirects or rewrites that need the request
+├── lib/             logic, no UI
+│   ├── vendyx/      Vendyx storefront API layer, server only
+│   └── <module>/    one folder per domain: catalog, cart, customer, shop
+├── shared/          UI and code reused across screens
+│   ├── components/  <component>/<file>.tsx
+│   ├── hooks/       use-<thing>.ts
+│   └── constants/ types/ utils/
+├── app/             routes and UI; each shop builds it
+└── proxy.ts         optional; only for redirects or rewrites that need the request
 ```
 
 - `@/` points to `src/`.
-- `src/app/` has no business logic: each `page.tsx` and `layout.tsx` imports and renders what lives in `src/lib/<module>/`.
-- Route groups `(group)` organize routes that share a layout without changing the URL, for example `(shop)` and `(account)`.
+- The template ships `lib` and `shared`. `app` only has the root layout: each shop builds its own screens.
 
-## Module
+## Modules (`src/lib/<module>`)
 
 ```
 src/lib/<module>/
-├── data/          get-<thing>.ts, server-only reads (Data Access Layer) and cookie helpers
-├── actions/       <action>.ts, Server Actions
-├── pages/         <name>-page.tsx, one per route
-├── components/    <component>/<file>.tsx, grouped by screen or piece
-├── hooks/         use-<thing>.ts, client hooks
+├── data/          get-<thing>.ts, Vendyx queries (Data Access Layer)
+├── actions/       <action>.ts, Vendyx flows (Server Actions)
 ├── constants/     cache-tags.ts and module constants
-└── utils/         <topic>-utils.ts, pure functions
+└── utils/         <topic>-utils.ts, utilities used by data and actions
 ```
 
 A module only creates the folders it uses.
+
+- `data/` only holds Vendyx queries and `actions/` only holds Vendyx flows. Everything else those two share (cookies, guards) is a utility in `utils/`.
+- A utility that touches cookies, calls Vendyx or redirects starts with `import 'server-only'`. Without that line, it must be safe to import from a Client Component.
+- Modules have no UI: no pages, components or hooks.
+- A module never imports another module, `src/app` or `src/shared/components`. It only uses its own files, `@/lib/vendyx` and `@/shared` (constants, types and utils). Combining modules is the job of `src/app`.
 
 ### Included modules
 
@@ -42,26 +48,58 @@ The template ships the data and actions most shops share. Each shop removes what
 | Module | Data | Actions |
 |--------|------|---------|
 | `shop` | `getShop` | |
-| `product` | `getProducts`, `getProduct` | |
-| `collection` | `getCollections`, `getCollection` (with its products) | |
-| `cart` | `getCart` | `addToCart`, `updateCartItem`, `removeCartItem`, `applyDiscountCode`, `goToCheckout` |
-| `customer` | `getCustomer`, `getCustomerOrders` | `signIn`, `signUp`, `signOut`, `updateCustomer` |
+| `catalog` | `getProducts`, `getProduct`, `getCollections`, `getCollection` (with its products) | |
+| `cart` | `getCart` | `addToCart`, `updateCartItem`, `removeCartItem`, `applyDiscountCode`, `addCustomerToCart` |
+| `customer` | `getCustomer`, `getCustomerOrders` | `signIn`, `signUp`, `signInWithGoogle`, `signOut`, `requestPasswordReset`, `resetPassword`, `updateCustomer` |
 
-## Routes
+Server-only utilities: `cart/utils/cart-id-utils.ts` (cart cookie), `customer/utils/customer-token-utils.ts` (token cookie) and `customer/utils/customer-guard-utils.ts` (`ensureCustomer`).
+
+The only component the template ships is `shared/components/google-sign-in-button`, because Google's button needs its script.
+
+## App (`src/app`)
+
+The UI and the place where modules are combined. A screen that reads the cart and the customer, or an action that uses two modules, lives here.
+
+```
+src/app/
+├── layout.tsx
+├── (shop)/
+│   ├── products/[slug]/
+│   │   ├── page.tsx
+│   │   └── _components/          variant-picker/, add-to-cart-form/...
+│   └── cart/
+│       ├── page.tsx
+│       ├── _components/          cart-items/, checkout-button/...
+│       └── _actions/
+│           └── go-to-checkout.ts
+└── (account)/
+    └── orders/page.tsx
+```
+
+- What only one route uses lives next to it in private folders: `_components/`, `_actions/`, `_hooks/`. The `_` opts the folder out of routing ([Private folders](https://nextjs.org/docs/app/getting-started/project-structure#private-folders)). They're created only when needed.
+- What two screens use moves up to `src/shared/`.
+- An action in `_actions/` is a flow that combines modules; it calls the modules' data and actions, never `vendyxFetch`.
+- Route groups `(group)` organize routes that share a layout without changing the URL, for example `(shop)` and `(account)`.
 
 ```tsx
-// src/app/products/[slug]/page.tsx
-import { ProductPage } from '@/lib/product/pages/product-page';
+import { notFound } from 'next/navigation';
 
-export default function Page({ params }: PageProps<'/products/[slug]'>) {
-  return <ProductPage params={params} />;
+import { getProduct } from '@/lib/catalog/data/get-product';
+
+import { AddToCartForm } from './_components/add-to-cart-form/add-to-cart-form';
+
+export default async function Page({ params }: PageProps<'/products/[slug]'>) {
+  const { slug } = await params;
+  const product = await getProduct(slug);
+
+  if (!product) notFound();
+
+  return <AddToCartForm product={product} />;
 }
-
-export { generateMetadata } from '@/lib/product/pages/product-page';
 ```
 
 - Use the global `PageProps<'/route'>` and `LayoutProps<'/route'>` types; they're generated by Next.
-- `params` and `searchParams` are promises. Pass them down and `await` them in the component that needs them, inside `<Suspense>`.
+- `params` and `searchParams` are promises. `await` them in the component that needs them; if the route isn't prerendered with `generateStaticParams`, that component goes inside `<Suspense>`.
 - Routes with a known set of params (collections, featured products) export `generateStaticParams` to be prerendered.
 - Every route with its own data has `loading.tsx` or a `<Suspense>` with a skeleton that matches the final layout.
 - Missing resources call `notFound()` from `next/navigation`; each segment that needs it has its own `not-found.tsx`.
@@ -83,13 +121,13 @@ src/lib/vendyx/
 ├── vendyx-config.ts     env vars: VENDYX_API_URL, VENDYX_SHOP_ID, VENDYX_STOREFRONT_API_KEY, VENDYX_LOCALE
 ├── vendyx-client.ts     vendyxFetch: sends the operation with the shop headers and the customer token
 ├── operations/          <domain>-operations.ts: fragments, queries and mutations with graphql(...)
-├── errors/              <domain>-errors.ts: get<Domain>Error(code) → { error, errorCode }
+├── errors/              <domain>-errors.ts: get<Domain>Error(code) → { error, errorCode }; vendyx-errors.ts
 ├── codegen/             generated by `yarn gen:types`, never edited by hand
 └── types.ts             re-exports the generated types
 ```
 
 - `vendyx-config.ts` is the only file that reads `process.env` for Vendyx. The API key never reaches the client and never uses the `NEXT_PUBLIC_` prefix.
-- `vendyxFetch(OPERATION, variables, { accessToken })` sends `x_lune_shop_id`, `x_lune_storefront_api_key`, `x_lune_storefront_locale` (if set) and `Authorization: Bearer <token>` when there's a customer. It doesn't read cookies, so it can run inside `'use cache'`. It throws on HTTP or GraphQL errors.
+- `vendyxFetch(OPERATION, variables, { accessToken })` sends `x_lune_shop_id`, `x_lune_storefront_api_key`, `x_lune_storefront_locale` (if set) and `Authorization: Bearer <token>` when there's a customer. It doesn't read cookies, so it can run inside `'use cache'`. It throws `VendyxUnauthorizedError` when Vendyx answers `UNAUTHORIZED` (invalid or expired customer token) and a plain `Error` on any other HTTP or GraphQL error.
 - `yarn gen:types` reads the schema from the hosted API (`VENDYX_API_URL`, production by default): nothing needs to run locally. Run it after adding or changing an operation.
 - Each operation selects only what the storefront uses. The fragment is the DTO: components receive `ProductCardFragment`, `CartFragment`... imported from `@/lib/vendyx/types`, never a full API type.
 - Fragment masking is off: a fragment's fields are read directly from the response.
@@ -98,7 +136,7 @@ src/lib/vendyx/
 
 ## Reading data
 
-Reads live in `src/lib/<module>/data/`, start with `import 'server-only'` and call `vendyxFetch`. Components never call `vendyxFetch` directly.
+Reads live in `src/lib/<module>/data/`, start with `import 'server-only'` and call `vendyxFetch`. `src/app` and `src/shared` never call `vendyxFetch` directly.
 
 ### Public data (catalog)
 
@@ -109,15 +147,15 @@ import 'server-only';
 
 import { cacheLife, cacheTag } from 'next/cache';
 
-import { GET_PRODUCT_QUERY } from '@/lib/vendyx/operations/product-operations';
+import { GET_PRODUCT_QUERY } from '@/lib/vendyx/operations/catalog-operations';
 import { vendyxFetch } from '@/lib/vendyx/vendyx-client';
 
-import { ProductCacheTags } from '../constants/cache-tags';
+import { CatalogCacheTags } from '../constants/cache-tags';
 
 export const getProduct = async (slug: string) => {
   'use cache';
   cacheLife('hours');
-  cacheTag(ProductCacheTags.Product(slug), ProductCacheTags.Products);
+  cacheTag(CatalogCacheTags.Product(slug), CatalogCacheTags.Products);
 
   const { product } = await vendyxFetch(GET_PRODUCT_QUERY, { slug });
 
@@ -133,7 +171,8 @@ export const getProduct = async (slug: string) => {
 
 Depends on cookies, so it's not cached with `'use cache'`.
 
-- The cart id (`vendyx_cart_id`) and the customer token (`vendyx_customer_token`) live in `httpOnly` cookies. Their helpers (`get`, `set`, `delete`) are in `cart/data/cart-id.ts` and `customer/data/customer-token.ts`; nothing else reads those cookies.
+- The cart id (`vendyx_cart_id`) and the customer token (`vendyx_customer_token`) live in `httpOnly` cookies. Their utilities (`get`, `set`, `delete`) are in `cart/utils/cart-id-utils.ts` and `customer/utils/customer-token-utils.ts`; nothing else reads those cookies.
+- The customer token is sent only to customer operations (`me`, orders, `updateCustomer`). Cart operations don't use it.
 - The component that reads per-customer data goes inside `<Suspense>` with a fallback, so the rest of the page stays in the static shell.
 - If the same value is read several times in one request (the current customer, the cart), wrap the function with `cache` from `react`.
 - If it needs a lifetime to be included in prefetches, use `'use cache: private'`.
@@ -144,7 +183,7 @@ Independent reads start together with `Promise.all`, or in sibling components ea
 
 ## Mutations
 
-Mutations are Server Actions in `src/lib/<module>/actions/<action>.ts`, with `'use server'` at the top of the file. Every export of that file becomes a public endpoint, so helpers go unexported or in `data/`.
+Mutations are Server Actions in `src/lib/<module>/actions/<action>.ts`, with `'use server'` at the top of the file. Every export of that file becomes a public endpoint, so shared functions go unexported or in `utils/`.
 
 ```ts
 'use server';
@@ -190,7 +229,7 @@ const Schema = z.object({
 });
 ```
 
-- The signature is `(prevState, formData)` so it works directly with `useActionState`. Actions without a result (`signOut`, `goToCheckout`) take no arguments.
+- Actions used by forms take `(prevState, formData)` so they work directly with `useActionState`. Actions called from code take a typed argument (`signInWithGoogle(credential)`, `addCustomerToCart(input)`). Actions without a result (`signOut`) take no arguments.
 - A Server Action is a public endpoint: validate every input with zod (`getFormValues` drops empty fields) and check the customer's session inside the action, never only in the UI.
 - Return `ActionResult` from `@/shared/types/action-result` (`{ isSuccess: true }` or `{ isSuccess: false, error, errorCode? }`). Expected errors are return values, not exceptions.
 - Unexpected errors go to `console.error` and return `GENERIC_ERROR`.
@@ -208,9 +247,62 @@ const Schema = z.object({
 - A button that submits its own form reads its pending state with `useFormStatus`.
 - Server Actions aren't used to read data.
 
+## Authentication
+
+Vendyx is the identity provider: it stores customers and passwords, verifies Google and issues the token. The storefront doesn't use an auth library; the session is the Vendyx token in its cookie.
+
+### Signing in
+
+- **Email and password:** `signIn` and `signUp`.
+- **Google:** `GoogleSignInButton` loads Google Identity Services with the shop's own client ID (`NEXT_PUBLIC_GOOGLE_CLIENT_ID`), gets the Google ID token in the browser and passes it to `signInWithGoogle`, which sends it to Vendyx. There's no Google secret. The client ID must be the one configured for the shop in Vendyx, and the shop's domain must be an authorized JavaScript origin of that client in the Google console.
+- **Password reset:** `requestPasswordReset` asks Vendyx to send the email, which links to `<origin><CustomerRoutes.ResetPassword>?token=...`. It answers success even if the email doesn't exist, so it doesn't reveal accounts. `resetPassword` receives `token`, `password` and `confirmPassword`.
+- Every successful sign-in action saves the cookie with `setCustomerToken`. The customer is attached to the cart only when going to checkout, the one place where the cart's customer matters.
+- Routes live in `customer/constants/customer-routes.ts` (`CustomerRoutes`). Each shop sets them to its own pages.
+
+### Session
+
+- The cookie lasts as long as the token: its `maxAge` comes from the token's `exp` (read without verifying; Vendyx verifies it).
+- If Vendyx rejects the token anyway (`VendyxUnauthorizedError`), reads (`getCustomer`, `getCustomerOrders`) treat it as no session, and actions delete the cookie and return `SESSION_EXPIRED_ERROR`. Any other error is thrown, so a Vendyx outage doesn't look like a sign-out.
+
+### Authorization
+
+- Vendyx enforces it: `me`, orders and `updateCustomer` only answer to the token's owner. The storefront doesn't decide permissions.
+- Account pages call `ensureCustomer()`, which returns the customer or redirects to `CustomerRoutes.SignIn`.
+- Account actions check the token inside the action, never only in the UI.
+
 ## Checkout
 
-The storefront doesn't build the payment page. The cart's "checkout" button is a form with the `goToCheckout` action: if there's a signed-in customer it attaches them to the cart, then it redirects to `cart.checkoutUrl`, the Vendyx hosted checkout.
+The storefront doesn't build the payment page: it redirects to `cart.checkoutUrl`, the Vendyx hosted checkout. Going to checkout combines `cart` and `customer`, so it's an action of the cart screen in `src/app`:
+
+```ts
+'use server';
+
+import { redirect } from 'next/navigation';
+
+import { addCustomerToCart } from '@/lib/cart/actions/add-customer-to-cart';
+import { getCart } from '@/lib/cart/data/get-cart';
+import { getCustomer } from '@/lib/customer/data/get-customer';
+
+export const goToCheckout = async () => {
+  const cart = await getCart();
+  if (!cart) redirect('/');
+
+  const customer = await getCustomer();
+
+  if (customer?.email) {
+    await addCustomerToCart({
+      email: customer.email,
+      firstName: customer.firstName,
+      lastName: customer.lastName,
+      phoneNumber: customer.phoneNumber
+    });
+  }
+
+  redirect(cart.checkoutUrl);
+};
+```
+
+If attaching the customer fails, it still redirects: the customer fills in their data in the checkout.
 
 ## Route Handlers
 

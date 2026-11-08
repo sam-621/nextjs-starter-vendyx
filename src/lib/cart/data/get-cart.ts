@@ -5,7 +5,7 @@ import { cache } from 'react';
 import { GET_CART_QUERY } from '@/lib/vendyx/operations/cart-operations';
 import { vendyxFetch } from '@/lib/vendyx/vendyx-client';
 
-import { getCartId } from './cart-id';
+import { getCartId } from '../utils/cart-id-utils';
 
 export const getCart = cache(async () => {
   const cartId = await getCartId();
