@@ -60,6 +60,14 @@ if (!result.accessToken) {
 }
 ```
 
+- An arrow function whose body doesn't fit on one line uses braces and `return`, never an expression body spread over several lines:
+
+```ts
+export const getProductMetadata = (product: ProductDetailsFragment, path: string) => {
+  return getPageMetadata({ title: product.name, path });
+};
+```
+
 - No logic in JSX: conditions and mappings with more than one step go to a variable or function above the `return`.
 
 ## Server code

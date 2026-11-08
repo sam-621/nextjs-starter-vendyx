@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import { Geist_Mono, Inter } from 'next/font/google';
 
+import { getShop } from '@/lib/shop/data/get-shop';
 import { ToastProvider } from '@/shared/components/ui/toast';
+import { SITE_URL } from '@/shared/utils/site-url';
 
 import './globals.css';
 
@@ -15,9 +17,16 @@ const geistMono = Geist_Mono({
   subsets: ['latin']
 });
 
-export const metadata: Metadata = {
-  title: 'Vendyx Storefront',
-  description: 'Storefront built on Vendyx'
+export const generateMetadata = async (): Promise<Metadata> => {
+  const shop = await getShop();
+  const name = shop?.name ?? 'Tienda';
+
+  return {
+    metadataBase: new URL(SITE_URL),
+    title: { template: `%s | ${name}`, default: name },
+    openGraph: { siteName: name, locale: 'es_MX', type: 'website' },
+    icons: shop?.logo ? { icon: shop.logo } : undefined
+  };
 };
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {

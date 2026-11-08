@@ -28,6 +28,8 @@ type Documents = {
   '\n  fragment CollectionCard on Collection {\n    id\n    name\n    slug\n    description\n    assets(input: { take: 1 }) {\n      items {\n        id\n        source\n      }\n    }\n  }\n': typeof types.CollectionCardFragmentDoc;
   '\n  query GetCollections($input: CollectionListInput) {\n    collections(input: $input) {\n      count\n      items {\n        ...CollectionCard\n      }\n    }\n  }\n': typeof types.GetCollectionsDocument;
   '\n  query GetCollection($slug: String!, $products: ProductListInput) {\n    collection(slug: $slug) {\n      ...CollectionCard\n      products(input: $products) {\n        count\n        items {\n          ...ProductCard\n        }\n      }\n    }\n  }\n': typeof types.GetCollectionDocument;
+  '\n  query GetProductSlugs($input: ProductListInput) {\n    products(input: $input) {\n      count\n      items {\n        slug\n        updatedAt\n      }\n    }\n  }\n': typeof types.GetProductSlugsDocument;
+  '\n  query GetCollectionSlugs($input: CollectionListInput) {\n    collections(input: $input) {\n      count\n      items {\n        slug\n        updatedAt\n      }\n    }\n  }\n': typeof types.GetCollectionSlugsDocument;
   '\n  fragment Customer on Customer {\n    id\n    firstName\n    lastName\n    email\n    phoneNumber\n  }\n': typeof types.CustomerFragmentDoc;
   '\n  fragment CustomerOrder on Order {\n    id\n    code\n    state\n    total\n    totalQuantity\n    placedAt\n  }\n': typeof types.CustomerOrderFragmentDoc;
   '\n  query GetCustomer {\n    me {\n      ...Customer\n    }\n  }\n': typeof types.GetCustomerDocument;
@@ -72,6 +74,10 @@ const documents: Documents = {
     types.GetCollectionsDocument,
   '\n  query GetCollection($slug: String!, $products: ProductListInput) {\n    collection(slug: $slug) {\n      ...CollectionCard\n      products(input: $products) {\n        count\n        items {\n          ...ProductCard\n        }\n      }\n    }\n  }\n':
     types.GetCollectionDocument,
+  '\n  query GetProductSlugs($input: ProductListInput) {\n    products(input: $input) {\n      count\n      items {\n        slug\n        updatedAt\n      }\n    }\n  }\n':
+    types.GetProductSlugsDocument,
+  '\n  query GetCollectionSlugs($input: CollectionListInput) {\n    collections(input: $input) {\n      count\n      items {\n        slug\n        updatedAt\n      }\n    }\n  }\n':
+    types.GetCollectionSlugsDocument,
   '\n  fragment Customer on Customer {\n    id\n    firstName\n    lastName\n    email\n    phoneNumber\n  }\n':
     types.CustomerFragmentDoc,
   '\n  fragment CustomerOrder on Order {\n    id\n    code\n    state\n    total\n    totalQuantity\n    placedAt\n  }\n':
@@ -187,6 +193,18 @@ export function graphql(
 export function graphql(
   source: '\n  query GetCollection($slug: String!, $products: ProductListInput) {\n    collection(slug: $slug) {\n      ...CollectionCard\n      products(input: $products) {\n        count\n        items {\n          ...ProductCard\n        }\n      }\n    }\n  }\n'
 ): typeof import('./graphql').GetCollectionDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  query GetProductSlugs($input: ProductListInput) {\n    products(input: $input) {\n      count\n      items {\n        slug\n        updatedAt\n      }\n    }\n  }\n'
+): typeof import('./graphql').GetProductSlugsDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  query GetCollectionSlugs($input: CollectionListInput) {\n    collections(input: $input) {\n      count\n      items {\n        slug\n        updatedAt\n      }\n    }\n  }\n'
+): typeof import('./graphql').GetCollectionSlugsDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

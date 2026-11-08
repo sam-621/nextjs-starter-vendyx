@@ -14,6 +14,7 @@ Single Next.js app (App Router, Cache Components, Tailwind v4). Commands run fro
 | Write any code | `docs/code-style.md` |
 | Write or change UI, or add components | `docs/design-system.md` |
 | Build or change a form | `docs/forms.md` |
+| Build a product or collection page, or touch metadata, sitemap or robots | `docs/seo.md` |
 | Use a Next.js API you are not sure about | its guide in `node_modules/next/dist/docs/` |
 
 ## Commands
@@ -40,6 +41,7 @@ Copy `.env.example` to `.env.local`.
 | `VENDYX_SHOP_ID` | The shop's id in Vendyx. |
 | `VENDYX_STOREFRONT_API_KEY` | The shop's storefront API key. Server only. |
 | `VENDYX_LOCALE` | Optional: `en`, `es` or `fr` for translated catalog content. |
+| `SITE_URL` | The shop's public URL (`https://tienda.com`), for canonical URLs, the sitemap and Open Graph. Fixed on purpose; see `docs/seo.md`. |
 | `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | The shop's Google OAuth client ID, for `GoogleSignInButton`. The same one configured for the shop in Vendyx. |
 
 ## Features

@@ -49,7 +49,7 @@ The template ships the data and actions most shops share. Each shop removes what
 | Module | Data | Actions |
 |--------|------|---------|
 | `shop` | `getShop` | |
-| `catalog` | `getProducts`, `getProduct`, `getCollections`, `getCollection` (with its products) | |
+| `catalog` | `getProducts`, `getProduct`, `getCollections`, `getCollection` (with its products), `getProductSlugs`, `getCollectionSlugs` | |
 | `cart` | `getCart` | `addToCart`, `updateCartItem`, `removeCartItem`, `applyDiscountCode`, `addCustomerToCart` |
 | `customer` | `getCustomer`, `getCustomerOrders` | `signIn`, `signUp`, `signInWithGoogle`, `signOut`, `requestPasswordReset`, `resetPassword`, `updateCustomer` |
 
@@ -312,6 +312,6 @@ Only for what a Server Action can't do: webhooks (for example, revalidating cata
 
 - Links with `next/link` and fonts with `next/font`.
 - Images with the plain `<img>` tag, never `next/image`: Vendyx already serves them optimized from its CDN. Every `<img>` has `alt`, `width` and `height`; images below the fold use `loading="lazy"`, and the main image of the page (the product's first image, the hero) uses `fetchPriority="high"`.
-- Each route exports `metadata` or `generateMetadata`; product and collection pages use the product's or collection's data.
+- Each route exports `metadata` or `generateMetadata`. Product and collection pages, the sitemap and robots follow `docs/seo.md`.
 - Components, tokens and styling rules are in `docs/design-system.md`.
 - Tailwind v4: the theme lives in `src/app/globals.css` with `@theme`. There's no `tailwind.config.js` and none is created.

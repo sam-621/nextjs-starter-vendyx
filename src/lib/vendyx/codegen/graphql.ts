@@ -478,6 +478,22 @@ export type GetCollectionQuery = {
   } | null;
 };
 
+export type GetProductSlugsQueryVariables = Exact<{
+  input?: ProductListInput | null | undefined;
+}>;
+
+export type GetProductSlugsQuery = {
+  products: { count: number; items: Array<{ slug: string; updatedAt: string }> };
+};
+
+export type GetCollectionSlugsQueryVariables = Exact<{
+  input?: CollectionListInput | null | undefined;
+}>;
+
+export type GetCollectionSlugsQuery = {
+  collections: { count: number; items: Array<{ slug: string; updatedAt: string }> };
+};
+
 export type CustomerFragment = {
   id: string;
   firstName: string | null;
@@ -1106,6 +1122,28 @@ fragment CollectionCard on Collection {
     }
   }
 }`) as unknown as TypedDocumentString<GetCollectionQuery, GetCollectionQueryVariables>;
+export const GetProductSlugsDocument = new TypedDocumentString(`
+    query GetProductSlugs($input: ProductListInput) {
+  products(input: $input) {
+    count
+    items {
+      slug
+      updatedAt
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<GetProductSlugsQuery, GetProductSlugsQueryVariables>;
+export const GetCollectionSlugsDocument = new TypedDocumentString(`
+    query GetCollectionSlugs($input: CollectionListInput) {
+  collections(input: $input) {
+    count
+    items {
+      slug
+      updatedAt
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<GetCollectionSlugsQuery, GetCollectionSlugsQueryVariables>;
 export const GetCustomerDocument = new TypedDocumentString(`
     query GetCustomer {
   me {

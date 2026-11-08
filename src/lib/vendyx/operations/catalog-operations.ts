@@ -125,3 +125,27 @@ export const GET_COLLECTION_QUERY = graphql(`
     }
   }
 `);
+
+export const GET_PRODUCT_SLUGS_QUERY = graphql(`
+  query GetProductSlugs($input: ProductListInput) {
+    products(input: $input) {
+      count
+      items {
+        slug
+        updatedAt
+      }
+    }
+  }
+`);
+
+export const GET_COLLECTION_SLUGS_QUERY = graphql(`
+  query GetCollectionSlugs($input: CollectionListInput) {
+    collections(input: $input) {
+      count
+      items {
+        slug
+        updatedAt
+      }
+    }
+  }
+`);
