@@ -29,7 +29,7 @@ const eslintConfig = defineConfig([
     }
   },
   prettier,
-  globalIgnores(['.next/**', 'out/**', 'build/**', 'next-env.d.ts'])
+  globalIgnores(['.next/**', 'out/**', 'build/**', 'next-env.d.ts', 'src/lib/vendyx/codegen/**'])
 ]);
 
 export default eslintConfig;

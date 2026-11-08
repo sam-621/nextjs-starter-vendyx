@@ -21,11 +21,23 @@ Single Next.js app (App Router, Cache Components, Tailwind v4). Commands run fro
 | `yarn lint:check` | Agent | Checks ESLint + Prettier. |
 | `yarn lint:fix` | Agent | Fixes lint, formatting and import order. |
 | `yarn build` | Agent | Typecheck and production build. |
+| `yarn gen:types` | Agent | Regenerates the Vendyx types from the hosted API. Run it after adding or changing an operation. |
 | `yarn dev` | User only | Local server on port 3001. If it is needed, ask and wait. |
 | `yarn start` | User only | Serves the production build. |
 
 - Don't run `tsc --noEmit` to check edits; IDE diagnostics are enough. The real typecheck is `yarn build`.
 - If a command isn't in `package.json` yet, say so instead of inventing another one.
+
+## Environment variables
+
+Copy `.env.example` to `.env.local`.
+
+| Variable | What for |
+|----------|----------|
+| `VENDYX_API_URL` | Vendyx API. `https://api.vendyx.so` by default. |
+| `VENDYX_SHOP_ID` | The shop's id in Vendyx. |
+| `VENDYX_STOREFRONT_API_KEY` | The shop's storefront API key. Server only. |
+| `VENDYX_LOCALE` | Optional: `en`, `es` or `fr` for translated catalog content. |
 
 ## Features
 

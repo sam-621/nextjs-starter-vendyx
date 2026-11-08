@@ -7,9 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint:check": "eslint . && prettier --check .",
-    "lint:fix": "eslint . --fix && prettier --write ."
+    "lint:fix": "eslint . --fix && prettier --write .",
+    "gen:types": "graphql-codegen && prettier --write src/lib/vendyx/codegen"
   },
   "dependencies": {
+    "graphql": "^17.1.0",
     "next": "16.4.5",
     "react": "19.3.0",
     "react-dom": "19.3.0",
@@ -17,6 +19,8 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^8.0.0",
+    "@graphql-codegen/client-preset": "^7.0.0",
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
