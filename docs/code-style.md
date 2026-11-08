@@ -30,7 +30,7 @@
 | Utils | `<topic>-utils.ts` | `price-utils.ts` |
 | Environment variable | SCREAMING_SNAKE_CASE; `NEXT_PUBLIC_` only if the browser needs it | `VENDYX_STOREFRONT_API_KEY` |
 
-- A file's role goes in its name with a hyphen, never with a dot: `price-utils.ts`, `cart-operations.ts`, `cart-errors.ts`. The only dot before the extension is reserved for tests (`price-utils.test.ts`).
+- A file's role goes in its name with a hyphen, never with a dot: `price-utils.ts`, `cart-operations.ts`, `vendyx-errors.ts`. The only dot before the extension is reserved for tests (`price-utils.test.ts`).
 
 ## Exports
 
@@ -51,6 +51,14 @@ export const Price = ({ amount }: Props) => {...};
 - One exported component per file. Private helpers of the same file go below it.
 - `'use client'` is the first line of the file, before imports.
 - Composition through `children` over prop drilling.
+- An `if` whose body doesn't fit on the same line gets braces. Never a body alone on the next line:
+
+```ts
+if (!result.accessToken) {
+  return { isSuccess: false, errorCode: ActionErrorCode.UnexpectedError };
+}
+```
+
 - No logic in JSX: conditions and mappings with more than one step go to a variable or function above the `return`.
 
 ## Server code

@@ -3,25 +3,25 @@
 import { refresh } from 'next/cache';
 import { z } from 'zod';
 
-import { getCartError } from '@/lib/vendyx/errors/cart-errors';
 import {
   ADD_ITEM_TO_CART_MUTATION,
   CREATE_CART_MUTATION
 } from '@/lib/vendyx/operations/cart-operations';
-import type { AddItemToCartInput, CartErrorCode } from '@/lib/vendyx/types';
+import { CartErrorCode } from '@/lib/vendyx/types';
 import { vendyxFetch } from '@/lib/vendyx/vendyx-client';
-import { GENERIC_ERROR, INVALID_INPUT_ERROR } from '@/shared/constants/errors';
+import { ActionErrorCode } from '@/shared/constants/action-error-code';
 import type { ActionResult } from '@/shared/types/action-result';
-import { getFormValues } from '@/shared/utils/form-data-utils';
 
 import { getCartId, setCartId } from '../utils/cart-id-utils';
 
+type Input = z.infer<typeof Schema>;
+
 export const addToCart = async (
   _prevState: ActionResult<CartErrorCode> | null,
-  formData: FormData
+  input: Input
 ): Promise<ActionResult<CartErrorCode>> => {
-  const parsed = Schema.safeParse(getFormValues(formData));
-  if (!parsed.success) return { isSuccess: false, error: INVALID_INPUT_ERROR };
+  const parsed = Schema.safeParse(input);
+  if (!parsed.success) return { isSuccess: false, errorCode: ActionErrorCode.InvalidInput };
 
   try {
     const cartId = await getCartId();
@@ -38,24 +38,24 @@ export const addToCart = async (
         return { isSuccess: true };
       }
 
-      if (apiError.code !== 'CART_NOT_FOUND') {
-        return { isSuccess: false, ...getCartError(apiError.code) };
+      if (apiError.code !== CartErrorCode.CartNotFound) {
+        return { isSuccess: false, errorCode: apiError.code, message: apiError.message };
       }
     }
 
     return await createCart(parsed.data);
   } catch (error) {
     console.error(error);
-    return { isSuccess: false, error: GENERIC_ERROR };
+    return { isSuccess: false, errorCode: ActionErrorCode.UnexpectedError };
   }
 };
 
-const createCart = async (item: AddItemToCartInput): Promise<ActionResult<CartErrorCode>> => {
+const createCart = async (item: Input): Promise<ActionResult<CartErrorCode>> => {
   const { createCart: result } = await vendyxFetch(CREATE_CART_MUTATION, { input: { item } });
   const [apiError] = result.apiErrors;
 
-  if (apiError) return { isSuccess: false, ...getCartError(apiError.code) };
-  if (!result.cart) return { isSuccess: false, error: GENERIC_ERROR };
+  if (apiError) return { isSuccess: false, errorCode: apiError.code, message: apiError.message };
+  if (!result.cart) return { isSuccess: false, errorCode: ActionErrorCode.UnexpectedError };
 
   await setCartId(result.cart.id);
   return { isSuccess: true };
@@ -63,5 +63,5 @@ const createCart = async (item: AddItemToCartInput): Promise<ActionResult<CartEr
 
 const Schema = z.object({
   variantId: z.string().min(1),
-  quantity: z.coerce.number().int().positive().default(1)
+  quantity: z.number().int().positive()
 });

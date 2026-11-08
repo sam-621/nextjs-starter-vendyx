@@ -1,1 +1,1 @@
-export type * from './codegen/graphql';
+export * from './codegen/graphql';

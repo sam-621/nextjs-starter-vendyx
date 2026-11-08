@@ -27,26 +27,28 @@ export type BooleanFilter = {
 };
 
 /**  Utils  */
-export type CartErrorCode =
-  | 'ASSET_NOT_FOUND'
-  | 'ATTACHMENTS_NOT_ALLOWED'
-  | 'CART_ITEM_NOT_FOUND'
-  | 'CART_NOT_FOUND'
-  | 'DISCOUNT_CODE_NOT_APPLICABLE'
-  | 'DISCOUNT_HANDLER_NOT_FOUND'
-  | 'FORBIDDEN_CART_ACTION'
-  | 'INVALID_INPUT'
-  | 'INVALID_PICKUP_LOCATION'
-  | 'INVALID_SHIPPING_METHOD'
-  | 'MISSING_SHIPPING_ADDRESS'
-  | 'NOT_ENOUGH_STOCK'
-  | 'PAYMENT_FAILED'
-  | 'PAYMENT_HANDLER_NOT_FOUND'
-  | 'PAYMENT_METHOD_NOT_FOUND'
-  | 'PHONE_NUMBER_ALREADY_EXISTS'
-  | 'PREPARE_PAYMENT_FAILED'
-  | 'VARIANT_NOT_FOUND';
+export const CartErrorCode = {
+  AssetNotFound: 'ASSET_NOT_FOUND',
+  AttachmentsNotAllowed: 'ATTACHMENTS_NOT_ALLOWED',
+  CartItemNotFound: 'CART_ITEM_NOT_FOUND',
+  CartNotFound: 'CART_NOT_FOUND',
+  DiscountCodeNotApplicable: 'DISCOUNT_CODE_NOT_APPLICABLE',
+  DiscountHandlerNotFound: 'DISCOUNT_HANDLER_NOT_FOUND',
+  ForbiddenCartAction: 'FORBIDDEN_CART_ACTION',
+  InvalidInput: 'INVALID_INPUT',
+  InvalidPickupLocation: 'INVALID_PICKUP_LOCATION',
+  InvalidShippingMethod: 'INVALID_SHIPPING_METHOD',
+  MissingShippingAddress: 'MISSING_SHIPPING_ADDRESS',
+  NotEnoughStock: 'NOT_ENOUGH_STOCK',
+  PaymentFailed: 'PAYMENT_FAILED',
+  PaymentHandlerNotFound: 'PAYMENT_HANDLER_NOT_FOUND',
+  PaymentMethodNotFound: 'PAYMENT_METHOD_NOT_FOUND',
+  PhoneNumberAlreadyExists: 'PHONE_NUMBER_ALREADY_EXISTS',
+  PreparePaymentFailed: 'PREPARE_PAYMENT_FAILED',
+  VariantNotFound: 'VARIANT_NOT_FOUND'
+} as const;
 
+export type CartErrorCode = (typeof CartErrorCode)[keyof typeof CartErrorCode];
 export type CollectionFilters = {
   customField?: CustomFieldFilter | null | undefined;
   isTopLevel?: BooleanFilter | null | undefined;
@@ -72,26 +74,32 @@ export type CustomFieldFilter = {
   value: string;
 };
 
-export type CustomerErrorCode =
-  | 'CUSTOMER_NOT_FOUND'
-  | 'DISABLED_CUSTOMER'
-  | 'EMAIL_ALREADY_EXISTS'
-  | 'INVALID_ACCESS_TOKEN'
-  | 'INVALID_CREDENTIALS'
-  | 'INVALID_EMAIL'
-  | 'INVALID_OAUTH_TOKEN'
-  | 'INVALID_PASSWORD_TOKEN'
-  | 'INVALID_PHONE_NUMBER'
-  | 'PASSWORDS_DO_NOT_MATCH'
-  | 'PHONE_NUMBER_ALREADY_EXISTS';
+export const CustomerErrorCode = {
+  CustomerNotFound: 'CUSTOMER_NOT_FOUND',
+  DisabledCustomer: 'DISABLED_CUSTOMER',
+  EmailAlreadyExists: 'EMAIL_ALREADY_EXISTS',
+  InvalidAccessToken: 'INVALID_ACCESS_TOKEN',
+  InvalidCredentials: 'INVALID_CREDENTIALS',
+  InvalidEmail: 'INVALID_EMAIL',
+  InvalidOauthToken: 'INVALID_OAUTH_TOKEN',
+  InvalidPasswordToken: 'INVALID_PASSWORD_TOKEN',
+  InvalidPhoneNumber: 'INVALID_PHONE_NUMBER',
+  PasswordsDoNotMatch: 'PASSWORDS_DO_NOT_MATCH',
+  PhoneNumberAlreadyExists: 'PHONE_NUMBER_ALREADY_EXISTS'
+} as const;
 
+export type CustomerErrorCode = (typeof CustomerErrorCode)[keyof typeof CustomerErrorCode];
 export type OptionValueFilter = {
   option: string;
   values: Array<string>;
 };
 
-export type OrderBy = 'ASC' | 'DESC';
+export const OrderBy = {
+  Asc: 'ASC',
+  Desc: 'DESC'
+} as const;
 
+export type OrderBy = (typeof OrderBy)[keyof typeof OrderBy];
 export type OrderFilters = {
   /** Filter by order code */
   code?: StringFilter | null | undefined;
@@ -107,20 +115,22 @@ export type OrderListInput = {
 };
 
 /** Order state enum */
-export type OrderState =
+export const OrderState = {
   /** The order is being built by the business and has not been placed yet */
-  | 'DRAFT'
+  Draft: 'DRAFT',
   /** Every remaining unit has a fulfillment */
-  | 'FULFILLED'
+  Fulfilled: 'FULFILLED',
   /** There are no units left to fulfill */
-  | 'FULFILLMENT_NOT_REQUIRED'
+  FulfillmentNotRequired: 'FULFILLMENT_NOT_REQUIRED',
   /** The order is being modified by the customer */
-  | 'MODIFYING'
+  Modifying: 'MODIFYING',
   /** Some units have a fulfillment, others are still pending */
-  | 'PARTIALLY_FULFILLED'
+  PartiallyFulfilled: 'PARTIALLY_FULFILLED',
   /** Order has been placed and none of its units has a fulfillment yet */
-  | 'UNFULFILLED';
+  Unfulfilled: 'UNFULFILLED'
+} as const;
 
+export type OrderState = (typeof OrderState)[keyof typeof OrderState];
 export type PriceRange = {
   max?: number | null | undefined;
   min?: number | null | undefined;

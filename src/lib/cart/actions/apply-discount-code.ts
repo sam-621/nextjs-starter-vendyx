@@ -3,25 +3,23 @@
 import { refresh } from 'next/cache';
 import { z } from 'zod';
 
-import { getCartError } from '@/lib/vendyx/errors/cart-errors';
 import { ADD_DISCOUNT_CODE_TO_CART_MUTATION } from '@/lib/vendyx/operations/cart-operations';
-import type { CartErrorCode } from '@/lib/vendyx/types';
+import { CartErrorCode } from '@/lib/vendyx/types';
 import { vendyxFetch } from '@/lib/vendyx/vendyx-client';
-import { GENERIC_ERROR, INVALID_INPUT_ERROR } from '@/shared/constants/errors';
+import { ActionErrorCode } from '@/shared/constants/action-error-code';
 import type { ActionResult } from '@/shared/types/action-result';
-import { getFormValues } from '@/shared/utils/form-data-utils';
 
 import { getCartId } from '../utils/cart-id-utils';
 
 export const applyDiscountCode = async (
   _prevState: ActionResult<CartErrorCode> | null,
-  formData: FormData
+  input: z.infer<typeof Schema>
 ): Promise<ActionResult<CartErrorCode>> => {
-  const parsed = Schema.safeParse(getFormValues(formData));
-  if (!parsed.success) return { isSuccess: false, error: INVALID_INPUT_ERROR };
+  const parsed = Schema.safeParse(input);
+  if (!parsed.success) return { isSuccess: false, errorCode: ActionErrorCode.InvalidInput };
 
   const cartId = await getCartId();
-  if (!cartId) return { isSuccess: false, ...getCartError('CART_NOT_FOUND') };
+  if (!cartId) return { isSuccess: false, errorCode: CartErrorCode.CartNotFound };
 
   try {
     const { addDiscountCodeToCart: result } = await vendyxFetch(
@@ -30,13 +28,13 @@ export const applyDiscountCode = async (
     );
     const [apiError] = result.apiErrors;
 
-    if (apiError) return { isSuccess: false, ...getCartError(apiError.code) };
+    if (apiError) return { isSuccess: false, errorCode: apiError.code, message: apiError.message };
 
     refresh();
     return { isSuccess: true };
   } catch (error) {
     console.error(error);
-    return { isSuccess: false, error: GENERIC_ERROR };
+    return { isSuccess: false, errorCode: ActionErrorCode.UnexpectedError };
   }
 };
 

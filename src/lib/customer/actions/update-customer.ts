@@ -3,26 +3,24 @@
 import { refresh } from 'next/cache';
 import { z } from 'zod';
 
-import { getCustomerError, SESSION_EXPIRED_ERROR } from '@/lib/vendyx/errors/customer-errors';
 import { VendyxUnauthorizedError } from '@/lib/vendyx/errors/vendyx-errors';
 import { UPDATE_CUSTOMER_MUTATION } from '@/lib/vendyx/operations/customer-operations';
 import type { CustomerErrorCode } from '@/lib/vendyx/types';
 import { vendyxFetch } from '@/lib/vendyx/vendyx-client';
-import { GENERIC_ERROR, INVALID_INPUT_ERROR } from '@/shared/constants/errors';
+import { ActionErrorCode } from '@/shared/constants/action-error-code';
 import type { ActionResult } from '@/shared/types/action-result';
-import { getFormValues } from '@/shared/utils/form-data-utils';
 
 import { deleteCustomerToken, getCustomerToken } from '../utils/customer-token-utils';
 
 export const updateCustomer = async (
   _prevState: ActionResult<CustomerErrorCode> | null,
-  formData: FormData
+  input: z.infer<typeof Schema>
 ): Promise<ActionResult<CustomerErrorCode>> => {
   const accessToken = await getCustomerToken();
-  if (!accessToken) return { isSuccess: false, error: SESSION_EXPIRED_ERROR };
+  if (!accessToken) return { isSuccess: false, errorCode: ActionErrorCode.SessionExpired };
 
-  const parsed = Schema.safeParse(getFormValues(formData));
-  if (!parsed.success) return { isSuccess: false, error: INVALID_INPUT_ERROR };
+  const parsed = Schema.safeParse(input);
+  if (!parsed.success) return { isSuccess: false, errorCode: ActionErrorCode.InvalidInput };
 
   try {
     const { updateCustomer: result } = await vendyxFetch(
@@ -32,18 +30,18 @@ export const updateCustomer = async (
     );
     const [apiError] = result.apiErrors;
 
-    if (apiError) return { isSuccess: false, ...getCustomerError(apiError.code) };
+    if (apiError) return { isSuccess: false, errorCode: apiError.code, message: apiError.message };
 
     refresh();
     return { isSuccess: true };
   } catch (error) {
     if (error instanceof VendyxUnauthorizedError) {
       await deleteCustomerToken();
-      return { isSuccess: false, error: SESSION_EXPIRED_ERROR };
+      return { isSuccess: false, errorCode: ActionErrorCode.SessionExpired };
     }
 
     console.error(error);
-    return { isSuccess: false, error: GENERIC_ERROR };
+    return { isSuccess: false, errorCode: ActionErrorCode.UnexpectedError };
   }
 };
 

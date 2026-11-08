@@ -6,6 +6,7 @@ import { useRef, useState, useTransition } from 'react';
 import Script from 'next/script';
 
 import { signInWithGoogle } from '@/lib/customer/actions/sign-in-with-google';
+import { getErrorMessage } from '@/shared/utils/error-message-utils';
 
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 
@@ -23,7 +24,7 @@ export const GoogleSignInButton = ({ onSuccess }: Props) => {
       const result = await signInWithGoogle(credential);
 
       if (!result.isSuccess) {
-        setError(result.error);
+        setError(getErrorMessage(result.errorCode));
         return;
       }
 

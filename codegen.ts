@@ -14,7 +14,7 @@ const config: CodegenConfig = {
       },
       config: {
         documentMode: 'string',
-        enumsAsTypes: true,
+        enumType: 'const',
         skipTypename: true,
         useTypeImports: true,
         scalars: {
