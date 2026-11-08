@@ -1,3 +1,4 @@
 {
-  "cSpell.words": ["vendyx"]
+  "cSpell.words": ["vendyx"],
+  "cSpell.ignorePaths": ["features/**", ".claude/**", "**/CLAUDE.md", "**/log.md"]
 }

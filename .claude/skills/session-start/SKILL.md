@@ -20,7 +20,8 @@ Don't write anything in this step: the log entry is created when the first task 
 
 ## During the conversation
 
-- Follow the Features section of the root `CLAUDE.md`: log after each task, plan step marked when finished, `spec/` updated with what the user asks without asking for confirmation; `docs/` only with confirmation.
+- Follow the Features section of the root `CLAUDE.md`: log after each task, plan step marked when finished, `[slug]` line in the root `log.md` when a step is finished, `spec/` updated with what the user asks without asking for confirmation; `docs/` only with confirmation.
+- Changes that aren't part of the feature go only to the root `log.md`, never to the feature's.
 - `spec/product.md` is the source of truth for the business. If something the user asks contradicts it, what they ask wins: implement it and update the `spec/`.
 - Before writing code, read the docs listed in the root `CLAUDE.md` for what you're about to do.
 - If something you're about to write is a new decision the docs don't cover, propose the change to the doc instead of improvising.

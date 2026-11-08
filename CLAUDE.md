@@ -61,9 +61,24 @@ Work on a feature starts with `/session-start <slug>`. Without it, don't read or
 
 - After finishing each task, add it to the author's entry for today in `log.md` (`## YYYY-MM-DD — <author>`, author = the part before the `@` of `git config user.email`). If the entry doesn't exist, create it at the end.
 - After finishing a step of the recommended work plan, mark it `[x]` in `spec/product.md`.
+- When creating the feature, finishing a step of the plan or closing it, add a `[slug]` line to the project log. The detail stays in the feature's `log.md`.
 - If the user asks for something that changes a rule, decision, technical or UI part, or contradicts the `spec/` (for example, something that was out of scope), what they ask wins: update `product.md`, `technical.md` and `ui.md` without asking for confirmation. Changes to `docs/` still need confirmation.
 - Git conflicts in `log.md`: accept both versions.
 - Agents in `.claude/agents/`: `implementer` implements a part of the feature and `reviewer` checks the pending changes against `docs/` and the `spec/`. Neither writes in `features/` or touches git.
+
+## Project log
+
+`log.md` at the root is the project's general log: what has been done, broadly. A feature's detail lives in its own `log.md`.
+
+- One entry per day and per author (`## YYYY-MM-DD — <author>`, same as in features). If it doesn't exist, create it at the end.
+- One line per change, in changelog language: what changed, not how the code ended up. Start with the commit type (`feat:`, `fix:`, `refactor:`...).
+- `[slug]` marks a line that summarizes a feature's work; without `[slug]` it's an isolated change and that line is its whole record.
+- It's written without a command, in any conversation:
+  - Without a feature session: each change applied in code or decision that someone who wasn't in the conversation would need to know.
+  - With a feature session: only what the Features section asks for.
+  - Not worth a line: formatting, renames, loose tests, changes reverted in the same conversation.
+- If an isolated change needs more than 2 or 3 lines to be understood, say it may be a feature. Don't create it unless the user asks.
+- Git conflicts in `log.md`: accept both versions.
 
 ## Docs
 
