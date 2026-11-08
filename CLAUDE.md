@@ -63,6 +63,7 @@ Work on a feature starts with `/session-start <slug>`. Without it, don't read or
 - After finishing a step of the recommended work plan, mark it `[x]` in `spec/product.md`.
 - If the user asks for something that changes a rule, decision, technical or UI part, or contradicts the `spec/` (for example, something that was out of scope), what they ask wins: update `product.md`, `technical.md` and `ui.md` without asking for confirmation. Changes to `docs/` still need confirmation.
 - Git conflicts in `log.md`: accept both versions.
+- Agents in `.claude/agents/`: `implementer` implements a part of the feature and `reviewer` checks the pending changes against `docs/` and the `spec/`. Neither writes in `features/` or touches git.
 
 ## Docs
 
