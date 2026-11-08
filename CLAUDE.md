@@ -46,29 +46,42 @@ They're validated with zod when the server starts (`src/instrumentation.ts`) and
 | `SITE_URL` | The shop's public URL (`https://tienda.com`), for canonical URLs, the sitemap and Open Graph. Fixed on purpose; see `docs/seo.md`. |
 | `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | The shop's Google OAuth client ID, for `GoogleSignInButton`. The same one configured for the shop in Vendyx. |
 
-## Features
+## Work
 
-`features/<slug>/` holds the working context of a feature:
+`work/` holds the working context: what is being done and what has been done. `docs/` says how code is written; `work/` doesn't.
+
+```
+work/
+├── log.md               project log
+└── features/
+    ├── _templates/
+    └── <slug>/
+        ├── spec/
+        └── log.md       feature log
+```
+
+### Features
+
+`work/features/<slug>/` holds the working context of a feature:
 
 - `spec/product.md`: context, flow, business rules, current decisions and recommended work plan. `status` in the frontmatter (`active` | `done`).
 - `spec/technical.md`: model, API and impact on existing code.
 - `spec/ui.md`: UI capabilities and where they live, without styles.
 - `log.md`: logbook with one entry per day and per author.
 
-Templates in `features/_templates/`. A feature is only created when the user asks for it.
+Templates in `work/features/_templates/`. A feature is only created when the user asks for it.
 
-Work on a feature starts with `/session-start <slug>`. Without it, don't read or write in `features/` unless the user asks. Within that conversation:
+Work on a feature starts with `/session-start <slug>`. Without it, don't read or write in `work/features/` unless the user asks. Within that conversation:
 
-- After finishing each task, add it to the author's entry for today in `log.md` (`## YYYY-MM-DD — <author>`, author = the part before the `@` of `git config user.email`). If the entry doesn't exist, create it at the end.
+- After finishing each task, add it to the author's entry for today in the feature's `log.md` (`## YYYY-MM-DD — <author>`, author = the part before the `@` of `git config user.email`). If the entry doesn't exist, create it at the end.
 - After finishing a step of the recommended work plan, mark it `[x]` in `spec/product.md`.
-- When creating the feature, finishing a step of the plan or closing it, add a `[slug]` line to the project log. The detail stays in the feature's `log.md`.
+- When creating the feature, finishing a step of the plan or closing it, add a `[slug]` line to `work/log.md`. The detail stays in the feature's `log.md`.
 - If the user asks for something that changes a rule, decision, technical or UI part, or contradicts the `spec/` (for example, something that was out of scope), what they ask wins: update `product.md`, `technical.md` and `ui.md` without asking for confirmation. Changes to `docs/` still need confirmation.
-- Git conflicts in `log.md`: accept both versions.
-- Agents in `.claude/agents/`: `implementer` implements a part of the feature and `reviewer` checks the pending changes against `docs/` and the `spec/`. Neither writes in `features/` or touches git.
+- Agents in `.claude/agents/`: `implementer` implements a part of the feature and `reviewer` checks the pending changes against `docs/` and the `spec/`. Neither writes in `work/` or touches git.
 
-## Project log
+### Project log
 
-`log.md` at the root is the project's general log: what has been done, broadly. A feature's detail lives in its own `log.md`.
+`work/log.md` is the project's general log: what has been done, broadly. A feature's detail lives in its own `log.md`.
 
 - One entry per day and per author (`## YYYY-MM-DD — <author>`, same as in features). If it doesn't exist, create it at the end.
 - One line per change, in changelog language: what changed, not how the code ended up. Start with the commit type (`feat:`, `fix:`, `refactor:`...).
@@ -78,7 +91,8 @@ Work on a feature starts with `/session-start <slug>`. Without it, don't read or
   - With a feature session: only what the Features section asks for.
   - Not worth a line: formatting, renames, loose tests, changes reverted in the same conversation.
 - If an isolated change needs more than 2 or 3 lines to be understood, say it may be a feature. Don't create it unless the user asks.
-- Git conflicts in `log.md`: accept both versions.
+
+Git conflicts in any `log.md`: accept both versions.
 
 ## Docs
 

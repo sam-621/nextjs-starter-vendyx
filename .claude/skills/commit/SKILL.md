@@ -21,12 +21,12 @@ disable-model-invocation: true
 ## Scope
 
 - The scope is the module in `src/lib/<module>`: `catalog`, `cart`, `customer`, `vendyx`...
-- No scope when the change spans several modules or is **only** about the harness (`features/`, `.claude/`, `docs/`, `CLAUDE.md`): `docs: add features folder`.
+- No scope when the change spans several modules or is **only** about the harness (`work/`, `.claude/`, `docs/`, `CLAUDE.md`): `docs: add work folder`.
 
 ## Steps
 
 1. Check `git status` and `git diff` to understand the change.
-2. By default, a single commit with **all** pending changes (code, `docs/`, `features/`, `.claude/`, `CLAUDE.md`, `AGENTS.md`). Split into several commits only if the user explicitly asks.
+2. By default, a single commit with **all** pending changes (code, `docs/`, `work/`, `.claude/`, `CLAUDE.md`, `AGENTS.md`). Split into several commits only if the user explicitly asks.
 3. The type, scope and description come from the largest functional change. Small accompanying changes (docs, harness rules) aren't mentioned and don't change the message.
 4. Add files by explicit path, every file `git status` shows. Never `git add -A` or `git add .`.
 5. Commit with `git commit -m "<message>"`.
@@ -38,5 +38,5 @@ disable-model-invocation: true
 feat(cart): can update line quantity
 fix(catalog): show variant price on product page
 refactor(vendyx): move storefront client to server-only module
-docs: add features folder
+docs: add work folder
 ```

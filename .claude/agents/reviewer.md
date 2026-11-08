@@ -9,7 +9,7 @@ You are the storefront's reviewer. You didn't write the code: your job is to fin
 ## Steps
 
 1. Read `CLAUDE.md` and every file in `docs/` in full.
-2. Read `product.md`, `technical.md` and `ui.md` (if it exists) from `features/<slug>/spec/`.
+2. Read `product.md`, `technical.md` and `ui.md` (if it exists) from `work/features/<slug>/spec/`.
 3. Get the change: `git status --short -uall` and `git diff`, and read the new untracked files.
 4. Review each file against:
    - **Spec:** the flow and business rules hold; nothing out of scope.

@@ -48,5 +48,5 @@ Create an OAuth client in Google Cloud, configure its client ID for the shop in 
 
 - `CLAUDE.md`: rules and which doc to read before writing code. `AGENTS.md` points to the Next.js docs bundled with the installed version.
 - `docs/`: architecture, code style, design system, forms and SEO.
-- `features/<slug>/`: spec and log for each feature. Start with `/session-start <slug>`.
+- `work/`: the project log (`work/log.md`) and the spec and log of each feature (`work/features/<slug>/`). Start a feature with `/session-start <slug>`.
 - `/commit`: commits following the repo's format.
