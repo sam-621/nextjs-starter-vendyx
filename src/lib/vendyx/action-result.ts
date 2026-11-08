@@ -5,3 +5,6 @@ export const ActionErrorCode = {
 } as const;
 
 export type ActionErrorCode = (typeof ActionErrorCode)[keyof typeof ActionErrorCode];
+
+export type ActionResult<C extends string = never> =
+  { isSuccess: true } | { isSuccess: false; errorCode: C | ActionErrorCode; message?: string };

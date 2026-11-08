@@ -3,23 +3,19 @@
 import { refresh } from 'next/cache';
 import { z } from 'zod';
 
+import { ActionErrorCode, type ActionResult } from '@/lib/vendyx/action-result';
 import {
   ADD_ITEM_TO_CART_MUTATION,
   CREATE_CART_MUTATION
 } from '@/lib/vendyx/operations/cart-operations';
 import { CartErrorCode } from '@/lib/vendyx/types';
 import { vendyxFetch } from '@/lib/vendyx/vendyx-client';
-import { ActionErrorCode } from '@/shared/constants/action-error-code';
-import type { ActionResult } from '@/shared/types/action-result';
 
 import { getCartId, setCartId } from '../utils/cart-id-utils';
 
 type Input = z.infer<typeof Schema>;
 
-export const addToCart = async (
-  _prevState: ActionResult<CartErrorCode> | null,
-  input: Input
-): Promise<ActionResult<CartErrorCode>> => {
+export const addToCart = async (input: Input): Promise<ActionResult<CartErrorCode>> => {
   const parsed = Schema.safeParse(input);
   if (!parsed.success) return { isSuccess: false, errorCode: ActionErrorCode.InvalidInput };
 

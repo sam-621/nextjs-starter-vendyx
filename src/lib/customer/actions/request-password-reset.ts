@@ -3,14 +3,12 @@
 import { headers } from 'next/headers';
 import { z } from 'zod';
 
+import { ActionErrorCode, type ActionResult } from '@/lib/vendyx/action-result';
 import { REQUEST_PASSWORD_RESET_MUTATION } from '@/lib/vendyx/operations/customer-operations';
 import { CustomerErrorCode } from '@/lib/vendyx/types';
 import { vendyxFetch } from '@/lib/vendyx/vendyx-client';
-import { ActionErrorCode } from '@/shared/constants/action-error-code';
-import type { ActionResult } from '@/shared/types/action-result';
 
 export const requestPasswordReset = async (
-  _prevState: ActionResult<CustomerErrorCode> | null,
   input: z.infer<typeof Schema>
 ): Promise<ActionResult<CustomerErrorCode>> => {
   const parsed = Schema.safeParse(input);

@@ -1,6 +1,5 @@
+import { ActionErrorCode } from '@/lib/vendyx/action-result';
 import { CartErrorCode, CustomerErrorCode } from '@/lib/vendyx/types';
-
-import { ActionErrorCode } from '../constants/action-error-code';
 
 type ErrorCode = ActionErrorCode | CartErrorCode | CustomerErrorCode;
 

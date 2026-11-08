@@ -3,17 +3,15 @@
 import { refresh } from 'next/cache';
 import { z } from 'zod';
 
+import { ActionErrorCode, type ActionResult } from '@/lib/vendyx/action-result';
 import { VendyxUnauthorizedError } from '@/lib/vendyx/errors/vendyx-errors';
 import { UPDATE_CUSTOMER_MUTATION } from '@/lib/vendyx/operations/customer-operations';
 import type { CustomerErrorCode } from '@/lib/vendyx/types';
 import { vendyxFetch } from '@/lib/vendyx/vendyx-client';
-import { ActionErrorCode } from '@/shared/constants/action-error-code';
-import type { ActionResult } from '@/shared/types/action-result';
 
 import { deleteCustomerToken, getCustomerToken } from '../utils/customer-token-utils';
 
 export const updateCustomer = async (
-  _prevState: ActionResult<CustomerErrorCode> | null,
   input: z.infer<typeof Schema>
 ): Promise<ActionResult<CustomerErrorCode>> => {
   const accessToken = await getCustomerToken();

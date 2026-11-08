@@ -3,14 +3,12 @@
 import { refresh } from 'next/cache';
 import { z } from 'zod';
 
+import { ActionErrorCode, type ActionResult } from '@/lib/vendyx/action-result';
 import { REMOVE_CART_ITEM_MUTATION } from '@/lib/vendyx/operations/cart-operations';
 import type { CartErrorCode } from '@/lib/vendyx/types';
 import { vendyxFetch } from '@/lib/vendyx/vendyx-client';
-import { ActionErrorCode } from '@/shared/constants/action-error-code';
-import type { ActionResult } from '@/shared/types/action-result';
 
 export const removeCartItem = async (
-  _prevState: ActionResult<CartErrorCode> | null,
   input: z.infer<typeof Schema>
 ): Promise<ActionResult<CartErrorCode>> => {
   const parsed = Schema.safeParse(input);

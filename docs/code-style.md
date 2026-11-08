@@ -22,7 +22,7 @@
 | Files and folders | kebab-case; private folders in `src/app` start with `_` | `_components/product-gallery/gallery-thumbnail.tsx` |
 | Page | `page.tsx` in its route folder, `export default function Page` | `app/(shop)/cart/page.tsx` |
 | Component | PascalCase, named export | `AddToCartButton` |
-| Hook | `use<Thing>` in `_hooks/use-<thing>.ts` or `shared/hooks/` | `useVariantSelection` |
+| Hook | `use<Thing>` in `_hooks/use-<thing>.ts` or `shared/hooks/`; a form's hook goes next to its component | `useVariantSelection`, `useSignUpForm` |
 | Data function | `get<Thing>` in `data/get-<thing>.ts` | `getProduct` |
 | Server Action | verb + noun in `actions/<verb>-<noun>.ts` or `_actions/` | `addToCart` in `add-to-cart.ts` |
 | Cache tags | `<Module>CacheTags` | `CartCacheTags.Cart` |
