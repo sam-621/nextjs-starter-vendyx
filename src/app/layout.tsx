@@ -3,6 +3,7 @@ import { Geist_Mono, Inter } from 'next/font/google';
 
 import { getShop } from '@/lib/shop/data/get-shop';
 import { ToastProvider } from '@/shared/components/ui/toast';
+import { getSiteName, OPEN_GRAPH_LOCALE } from '@/shared/utils/metadata';
 import { SITE_URL } from '@/shared/utils/site-url';
 
 import './globals.css';
@@ -18,13 +19,12 @@ const geistMono = Geist_Mono({
 });
 
 export const generateMetadata = async (): Promise<Metadata> => {
-  const shop = await getShop();
-  const name = shop?.name ?? 'Tienda';
+  const [shop, name] = await Promise.all([getShop(), getSiteName()]);
 
   return {
     metadataBase: new URL(SITE_URL),
     title: { template: `%s | ${name}`, default: name },
-    openGraph: { siteName: name, locale: 'es_MX', type: 'website' },
+    openGraph: { siteName: name, locale: OPEN_GRAPH_LOCALE, type: 'website' },
     icons: shop?.logo ? { icon: shop.logo } : undefined
   };
 };

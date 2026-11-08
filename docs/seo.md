@@ -16,7 +16,7 @@ What the template sets up for search engines and link previews, and what each pr
 | `src/app/sitemap.ts` | Home, every collection (`/collections/<slug>`) and every product (`/products/<slug>`), with `lastModified` from Vendyx. |
 | `src/app/robots.ts` | Allows everything and points to the sitemap. |
 | `src/lib/catalog/data/get-product-slugs.ts`, `get-collection-slugs.ts` | Every slug with its `updatedAt`, paginated, cached with the catalog tags. |
-| `src/shared/utils/metadata.ts` | `getProductMetadata(product, path)` and `getCollectionMetadata(collection, path)`: title, description, canonical, Open Graph and Twitter card. |
+| `src/shared/utils/metadata.ts` | `getProductMetadata(product, path)` and `getCollectionMetadata(collection, path)`, both async: title, description, canonical, Open Graph (with the shop's `siteName` and `locale`) and Twitter card. Also `getSiteName()` and `OPEN_GRAPH_LOCALE`, shared with the layout. |
 | `src/shared/utils/json-ld.ts` | `getProductJsonLd(product, url)`, with an absolute `url`: schema.org `Product` with an `AggregateOffer` (price range, currency, availability). |
 | `src/shared/components/json-ld/json-ld.tsx` | `JsonLd`: renders the data in a `<script type="application/ld+json">`, escaping `<`. |
 | `src/shared/utils/plain-text.ts` | `toPlainText(html, maxLength?)`. |
@@ -63,6 +63,7 @@ export default async function Page({ params }: PageProps<'/products/[slug]'>) {
 - `getProduct` is cached, so calling it in `generateMetadata` and in the page is one request to Vendyx.
 - Metadata paths are relative; `metadataBase` from the layout makes them absolute. JSON-LD isn't metadata, so its `url` is built with `getAbsoluteUrl`.
 - Collections use `getCollectionMetadata` the same way.
+- Next merges metadata shallowly: a page's `openGraph` replaces the layout's whole `openGraph`, it doesn't add to it. That's why the utilities set `siteName` and `locale` again. A page that builds its own `openGraph` by hand must include them too (`getSiteName()`, `OPEN_GRAPH_LOCALE`).
 
 ## Rules
 

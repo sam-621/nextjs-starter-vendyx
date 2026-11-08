@@ -1,10 +1,20 @@
 import type { Metadata } from 'next';
 
+import { getShop } from '@/lib/shop/data/get-shop';
 import type { CollectionCardFragment, ProductDetailsFragment } from '@/lib/vendyx/types';
 
 import { toPlainText } from './plain-text';
 
+export const OPEN_GRAPH_LOCALE = 'es_MX';
+
+const FALLBACK_SITE_NAME = 'Tienda';
 const DESCRIPTION_LENGTH = 160;
+
+export const getSiteName = async () => {
+  const shop = await getShop();
+
+  return shop?.name ?? FALLBACK_SITE_NAME;
+};
 
 type PageMetadataInput = {
   title: string;
@@ -13,7 +23,13 @@ type PageMetadataInput = {
   path: string;
 };
 
-const getPageMetadata = ({ title, description, image, path }: PageMetadataInput): Metadata => {
+const getPageMetadata = async ({
+  title,
+  description,
+  image,
+  path
+}: PageMetadataInput): Promise<Metadata> => {
+  const siteName = await getSiteName();
   const plainDescription = description ? toPlainText(description, DESCRIPTION_LENGTH) : undefined;
   const images = image ? [{ url: image, alt: title }] : undefined;
 
@@ -21,7 +37,15 @@ const getPageMetadata = ({ title, description, image, path }: PageMetadataInput)
     title,
     description: plainDescription,
     alternates: { canonical: path },
-    openGraph: { type: 'website', url: path, title, description: plainDescription, images },
+    openGraph: {
+      type: 'website',
+      siteName,
+      locale: OPEN_GRAPH_LOCALE,
+      url: path,
+      title,
+      description: plainDescription,
+      images
+    },
     twitter: {
       card: image ? 'summary_large_image' : 'summary',
       title,
