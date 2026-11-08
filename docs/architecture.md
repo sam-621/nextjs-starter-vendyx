@@ -167,6 +167,7 @@ export const getProduct = async (slug: string) => {
 ```
 
 - Every `'use cache'` has a `cacheLife` and at least one `cacheTag`.
+- Entities are tagged by slug (`Product(slug)`, `Collection(slug)`) and every catalog function also carries its list tag (`Products`, `Collections`). A collection also carries `Products`, because it lists products. Revalidating `Products` and `Collections` refreshes the whole catalog (see [Catalog revalidation](#catalog-revalidation)).
 - Tags come from `constants/cache-tags.ts` (`<Module>CacheTags`). Never loose strings as tags.
 - A cached function never reads `cookies()`, `headers()` or `searchParams`. If it needs a runtime value, it receives it as an argument.
 
@@ -306,7 +307,16 @@ If attaching the customer fails, it still redirects: the customer fills in their
 
 ## Route Handlers
 
-Only for what a Server Action can't do: webhooks (for example, revalidating catalog tags when something changes in Vendyx) and endpoints called by third parties. They live in `src/app/api/<name>/route.ts` and verify the request's signature or secret before doing anything.
+Only for what a Server Action can't do: webhooks and endpoints called by third parties. They live in `src/app/api/<name>/route.ts` and verify the request's signature or secret before doing anything.
+
+### Catalog revalidation
+
+`src/app/api/webhooks/vendyx/route.ts` receives Vendyx's webhooks and revalidates the whole catalog (`CatalogCacheTags.Products` and `CatalogCacheTags.Collections`) and the shop (`ShopCacheTags.Shop`) with `revalidateTag(tag, 'max')`, so a change in the admin shows up without waiting for `cacheLife`. It doesn't read the body: any call refreshes the whole catalog and the shop.
+
+- In Vendyx (Settings → Webhooks), the shop registers `<SITE_URL>/api/webhooks/vendyx` for the catalog events: `product.created`, `product.updated`, `product.removed`, `collection.created`, `collection.updated` and `collection.removed`. Variant, price and stock edits made in the admin arrive as `product.updated`.
+- With `'max'`, nothing is fetched at once: each page is refreshed when someone visits it, and meanwhile the previous version is served.
+- Vendyx doesn't retry failed webhooks; `cacheLife` is the safety net if one is lost.
+- **Not verified yet:** the endpoint doesn't check Vendyx's signature, so anyone with the URL can force a revalidation. Verifying `x-webhook-signature` (HMAC-SHA256 of the raw body with the webhook's secret) is pending until Vendyx shows that secret to the shop.
 
 ## UI
 
