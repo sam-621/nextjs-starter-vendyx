@@ -14,6 +14,6 @@ Open [http://localhost:3001](http://localhost:3001).
 ## Working with Claude Code
 
 - `CLAUDE.md`: rules and which doc to read before writing code. `AGENTS.md` points to the Next.js docs bundled with the installed version.
-- `docs/`: architecture and code style.
+- `docs/`: architecture, code style and design system.
 - `features/<slug>/`: spec and log for each feature. Start with `/session-start <slug>`.
 - `/commit`: commits following the repo's format.

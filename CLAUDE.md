@@ -12,6 +12,7 @@ Single Next.js app (App Router, Cache Components, Tailwind v4). Commands run fro
 |------------------------|------|
 | Create or move routes, data functions, Server Actions or components | `docs/architecture.md` |
 | Write any code | `docs/code-style.md` |
+| Write or change UI, or add components | `docs/design-system.md` |
 | Use a Next.js API you are not sure about | its guide in `node_modules/next/dist/docs/` |
 
 ## Commands

@@ -14,7 +14,7 @@ src/
 │   ├── vendyx/      Vendyx storefront API layer, server only
 │   └── <module>/    one folder per domain: catalog, cart, customer, shop
 ├── shared/          UI and code reused across screens
-│   ├── components/  <component>/<file>.tsx
+│   ├── components/  ui/ (design system, see design-system.md) and <component>/<file>.tsx
 │   ├── hooks/       use-<thing>.ts
 │   └── constants/ types/ utils/
 ├── app/             routes and UI; each shop builds it
@@ -22,7 +22,7 @@ src/
 ```
 
 - `@/` points to `src/`.
-- The template ships `lib` and `shared`. `app` only has the root layout: each shop builds its own screens.
+- The template ships `lib` and `shared`. `app` only has the root layout and an empty home page: each shop builds its own screens.
 
 ## Modules (`src/lib/<module>`)
 
@@ -54,7 +54,7 @@ The template ships the data and actions most shops share. Each shop removes what
 
 Server-only utilities: `cart/utils/cart-id-utils.ts` (cart cookie), and `customer/utils/customer-token-utils.ts` (token cookie).
 
-The only component the template ships is `shared/components/google-sign-in-button`, because Google's button needs its script.
+Besides the design system (`shared/components/ui`), the only component the template ships is `shared/components/google-sign-in-button`, because Google's button needs its script.
 
 ## App (`src/app`)
 
@@ -353,4 +353,5 @@ Only for what a Server Action can't do: webhooks (for example, revalidating cata
 - Links with `next/link` and fonts with `next/font`.
 - Images with the plain `<img>` tag, never `next/image`: Vendyx already serves them optimized from its CDN. Every `<img>` has `alt`, `width` and `height`; images below the fold use `loading="lazy"`, and the main image of the page (the product's first image, the hero) uses `fetchPriority="high"`.
 - Each route exports `metadata` or `generateMetadata`; product and collection pages use the product's or collection's data.
+- Components, tokens and styling rules are in `docs/design-system.md`.
 - Tailwind v4: the theme lives in `src/app/globals.css` with `@theme`. There's no `tailwind.config.js` and none is created.
