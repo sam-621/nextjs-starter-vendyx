@@ -15,6 +15,7 @@ Single Next.js app (App Router, Cache Components, Tailwind v4). Commands run fro
 | Write or change UI, or add components | `docs/design-system.md` |
 | Build or change a form | `docs/forms.md` |
 | Build a product or collection page, or touch metadata, sitemap or robots | `docs/seo.md` |
+| Write or change a test | `docs/testing.md` |
 | Use a Next.js API you are not sure about | its guide in `node_modules/next/dist/docs/` |
 
 ## Commands
@@ -23,6 +24,7 @@ Single Next.js app (App Router, Cache Components, Tailwind v4). Commands run fro
 |---------|-------------|----------|
 | `yarn lint:check` | Agent | Checks ESLint + Prettier. |
 | `yarn lint:fix` | Agent | Fixes lint, formatting and import order. |
+| `yarn test` | Agent | Runs the unit tests once (Vitest). |
 | `yarn build` | Agent | Typecheck and production build. |
 | `yarn gen:types` | Agent | Regenerates the Vendyx types from the hosted API. Run it after adding or changing an operation. |
 | `yarn dev` | User only | Local server on port 3001. If it is needed, ask and wait. |

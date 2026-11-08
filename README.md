@@ -42,11 +42,12 @@ Create an OAuth client in Google Cloud, configure its client ID for the shop in 
 | `yarn start` | Serves the production build. |
 | `yarn lint:check` | Checks ESLint and Prettier. |
 | `yarn lint:fix` | Fixes lint, formatting and import order. |
+| `yarn test` | Runs the unit tests once. `yarn test:watch` keeps them running. |
 | `yarn gen:types` | Regenerates the Vendyx types from the hosted API, after adding or changing an operation. |
 
 ## Working with Claude Code
 
 - `CLAUDE.md`: rules and which doc to read before writing code. `AGENTS.md` points to the Next.js docs bundled with the installed version.
-- `docs/`: architecture, code style, design system, forms and SEO.
+- `docs/`: architecture, code style, design system, forms, SEO and testing.
 - `work/`: the project log (`work/log.md`) and the spec and log of each feature (`work/features/<slug>/`). Start a feature with `/session-start <slug>`.
 - `/commit`: commits following the repo's format.

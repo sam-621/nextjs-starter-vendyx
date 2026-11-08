@@ -15,8 +15,9 @@ You are the storefront's reviewer. You didn't write the code: your job is to fin
    - **Spec:** the flow and business rules hold; nothing out of scope.
    - **Architecture:** layering (`lib` ← `shared` ← `app`), modules in `src/lib` don't import each other, operations in `src/lib/vendyx/operations`, data functions cached with their tags, actions return `ActionResult` with an `errorCode`, `_components`/`_actions` next to their route.
    - **Forms:** component plus hook, separate form and action schemas, action called from `onSubmit` inside `startTransition`.
-   - **Design system:** coss components and tokens only, no literal colors, `<img>` instead of `next/image`.
+   - **Design system:** coss components and tokens only, no literal colors, Vendyx images with `VendyxImage`, never `next/image`.
    - **SEO:** product and collection pages with `generateMetadata`, canonical and JSON-LD.
+   - **Tests:** UI logic that decides what the customer can do has a test, following `docs/testing.md`.
    - **Style:** no comments, naming, named exports, `type Props`, braces on multiline bodies.
 5. Run `yarn lint:check`.
 

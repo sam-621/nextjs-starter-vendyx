@@ -321,7 +321,16 @@ Only for what a Server Action can't do: webhooks and endpoints called by third p
 ## UI
 
 - Links with `next/link` and fonts with `next/font`.
-- Images with the plain `<img>` tag, never `next/image`: Vendyx already serves them optimized from its CDN. Every `<img>` has `alt`, `width` and `height`; images below the fold use `loading="lazy"`, and the main image of the page (the product's first image, the hero) uses `fetchPriority="high"`.
+- Images from Vendyx with `VendyxImage` (`@/shared/components/vendyx-image/vendyx-image`), never `next/image` or a bare `<img>`: Vendyx's CDN resizes them and serves them as WebP. It takes the asset's `source` and a `size`, and asks the CDN for that width (`?w=`) plus double for high density screens (`srcSet` 1x/2x).
+
+  | Size | Width | For |
+  |------|-------|-----|
+  | `small` | 320px | Thumbnails, cart lines, product cards in dense grids. |
+  | `medium` | 640px | Product cards, collection covers. |
+  | `large` | 1280px | Product gallery, hero. |
+
+  The size is the width the image is shown at, not a breakpoint. A shop that needs other widths changes `IMAGE_WIDTHS` in the component instead of building URLs by hand.
+- Every image has `alt`, `width` and `height`; images below the fold use `loading="lazy"`, and the main image of the page (the product's first image, the hero) uses `fetchPriority="high"`. Images that don't come from Vendyx (in `public/`) use a plain `<img>`.
 - Each route exports `metadata` or `generateMetadata`. Product and collection pages, the sitemap and robots follow `docs/seo.md`.
 - Components, tokens and styling rules are in `docs/design-system.md`.
 - Tailwind v4: the theme lives in `src/app/globals.css` with `@theme`. There's no `tailwind.config.js` and none is created.
