@@ -3,7 +3,7 @@
 import type React from 'react';
 import { Field as FieldPrimitive } from '@base-ui/react/field';
 
-import { cn } from '@/shared/utils/cn-utils';
+import { cn } from '@/shared/utils/cn';
 
 export function Field({ className, ...props }: FieldPrimitive.Root.Props): React.ReactElement {
   return (

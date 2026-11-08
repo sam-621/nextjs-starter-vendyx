@@ -6,7 +6,7 @@ import { useRef, useState, useTransition } from 'react';
 import Script from 'next/script';
 
 import { signInWithGoogle } from '@/lib/customer/actions/sign-in-with-google';
-import { getErrorMessage } from '@/shared/utils/error-message-utils';
+import { getErrorMessage } from '@/shared/utils/error-messages';
 
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 

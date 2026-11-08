@@ -3,7 +3,7 @@
 import type React from 'react';
 import { Popover as PopoverPrimitive } from '@base-ui/react/popover';
 
-import { cn } from '@/shared/utils/cn-utils';
+import { cn } from '@/shared/utils/cn';
 
 export const PopoverCreateHandle: typeof PopoverPrimitive.createHandle =
   PopoverPrimitive.createHandle;

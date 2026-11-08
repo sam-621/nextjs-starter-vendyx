@@ -9,7 +9,7 @@ import {
   segmentedControlItemSizeClassNames,
   type SegmentedControlSize
 } from '@/shared/components/ui/segmented-control';
-import { cn } from '@/shared/utils/cn-utils';
+import { cn } from '@/shared/utils/cn';
 
 type TabsVariant = 'default' | 'underline';
 type TabsSize = SegmentedControlSize;

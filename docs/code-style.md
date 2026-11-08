@@ -27,9 +27,10 @@
 | Server Action | verb + noun in `actions/<verb>-<noun>.ts` or `_actions/` | `addToCart` in `add-to-cart.ts` |
 | Cache tags | `<Module>CacheTags` | `CartCacheTags.Cart` |
 | Vendyx operation | SCREAMING_SNAKE_CASE with `_QUERY`, `_MUTATION` or `_FRAGMENT` suffix | `GET_PRODUCT_QUERY` |
-| Utils | `<topic>-utils.ts` | `price-utils.ts` |
+| Utils | `<topic>.ts`, or `<topic>-utils.ts` when the topic alone reads like a domain concept | `cn.ts`, `error-messages.ts`, `price-utils.ts` |
 | Environment variable | SCREAMING_SNAKE_CASE; `NEXT_PUBLIC_` only if the browser needs it | `VENDYX_STOREFRONT_API_KEY` |
 
+- A utility file only takes the `-utils` suffix when its name alone could be read as an entity or value object: `price-utils.ts` (not `price.ts`), `cart-id-utils.ts`, `customer-token-utils.ts`. When the name already says what it is (`cn.ts`, `error-messages.ts`), it goes without the suffix.
 - A file's role goes in its name with a hyphen, never with a dot: `price-utils.ts`, `cart-operations.ts`, `vendyx-errors.ts`. The only dot before the extension is reserved for tests (`price-utils.test.ts`).
 
 ## Exports

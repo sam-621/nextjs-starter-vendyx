@@ -3,7 +3,7 @@
 import type React from 'react';
 import { Fieldset as FieldsetPrimitive } from '@base-ui/react/fieldset';
 
-import { cn } from '@/shared/utils/cn-utils';
+import { cn } from '@/shared/utils/cn';
 
 export function Fieldset({
   className,

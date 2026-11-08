@@ -31,7 +31,7 @@ src/lib/<module>/
 ├── data/          get-<thing>.ts, Vendyx queries (Data Access Layer)
 ├── actions/       <action>.ts, Vendyx flows (Server Actions)
 ├── constants/     cache-tags.ts and module constants
-└── utils/         <topic>-utils.ts, utilities used by data and actions
+└── utils/         utilities used by data and actions (naming in code-style.md)
 ```
 
 A module only creates the folders it uses.
@@ -52,7 +52,7 @@ The template ships the data and actions most shops share. Each shop removes what
 | `cart` | `getCart` | `addToCart`, `updateCartItem`, `removeCartItem`, `applyDiscountCode`, `addCustomerToCart` |
 | `customer` | `getCustomer`, `getCustomerOrders` | `signIn`, `signUp`, `signInWithGoogle`, `signOut`, `requestPasswordReset`, `resetPassword`, `updateCustomer` |
 
-Server-only utilities: `cart/utils/cart-id-utils.ts` (cart cookie), and `customer/utils/customer-token-utils.ts` (token cookie).
+Server-only utilities: `cart/utils/cart-id-utils.ts` (cart cookie) and `customer/utils/customer-token-utils.ts` (token cookie).
 
 Besides the design system (`shared/components/ui`), the only component the template ships is `shared/components/google-sign-in-button`, because Google's button needs its script.
 
@@ -248,7 +248,7 @@ Forms live in `src/app`, next to the screen that uses them, or in `src/shared/co
 - The form has its own schema (zod or plain checks), with its messages and its screen-only fields (confirm password, accept terms). It doesn't import the action's schema.
 - The action runs from `onSubmit` inside `startTransition`, not from the `<form action>` prop: React 19 empties a form after an `action` finishes, even when it fails.
 - `useActionState(action, null)` gives `state` and `pending`. On submit, the form validates with its schema; if it passes, it calls the action inside `startTransition`.
-- Error codes become text with `getErrorMessage(errorCode)` from `@/shared/utils/error-message-utils`, the shop's map of code → message, keyed by the generated constants. A screen can handle a code differently (for example, `ActionErrorCode.SessionExpired` redirects to sign in).
+- Error codes become text with `getErrorMessage(errorCode)` from `@/shared/utils/error-messages`, the shop's map of code → message, keyed by the generated constants. A screen can handle a code differently (for example, `ActionErrorCode.SessionExpired` redirects to sign in).
 
 ```tsx
 'use client';
@@ -257,7 +257,7 @@ import { type FormEvent, startTransition, useActionState } from 'react';
 import { z } from 'zod';
 
 import { signIn } from '@/lib/customer/actions/sign-in';
-import { getErrorMessage } from '@/shared/utils/error-message-utils';
+import { getErrorMessage } from '@/shared/utils/error-messages';
 
 export const SignInForm = () => {
   const [state, dispatch, isPending] = useActionState(signIn, null);

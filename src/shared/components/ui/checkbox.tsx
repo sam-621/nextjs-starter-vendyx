@@ -3,7 +3,7 @@
 import type React from 'react';
 import { Checkbox as CheckboxPrimitive } from '@base-ui/react/checkbox';
 
-import { cn } from '@/shared/utils/cn-utils';
+import { cn } from '@/shared/utils/cn';
 
 export function Checkbox({
   className,

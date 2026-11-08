@@ -12,7 +12,7 @@ Base components and tokens from [coss ui](https://coss.com/ui), built on [Base U
   npx shadcn@latest add @coss/<name>
   ```
 
-- Components land in `src/shared/components/ui`, hooks in `src/shared/hooks` and `cn` in `src/shared/utils/cn-utils.ts`. If the CLI leaves something outside those paths, move it and fix the imports.
+- Components land in `src/shared/components/ui`, hooks in `src/shared/hooks` and `cn` in `src/shared/utils/cn.ts`. If the CLI leaves something outside those paths, move it and fix the imports.
 - After adding one, check what the CLI added: it may install dependencies the component doesn't need or append tokens to `src/app/globals.css` that already exist. Don't keep duplicates.
 - Base UI primitives use `render` instead of `asChild`: `<Button render={<Link href="/cart" />}>`.
 

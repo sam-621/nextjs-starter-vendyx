@@ -8,7 +8,7 @@ import { XIcon } from 'lucide-react';
 
 import { Button } from '@/shared/components/ui/button';
 import { ScrollArea } from '@/shared/components/ui/scroll-area';
-import { cn } from '@/shared/utils/cn-utils';
+import { cn } from '@/shared/utils/cn';
 
 export const Sheet: typeof SheetPrimitive.Root = SheetPrimitive.Root;
 

@@ -1,6 +1,6 @@
 import type React from 'react';
 
-import { cn } from '@/shared/utils/cn-utils';
+import { cn } from '@/shared/utils/cn';
 
 export function Skeleton({ className, ...props }: React.ComponentProps<'div'>): React.ReactElement {
   return (

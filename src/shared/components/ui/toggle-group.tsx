@@ -7,7 +7,7 @@ import type { VariantProps } from 'class-variance-authority';
 
 import { Separator } from '@/shared/components/ui/separator';
 import { Toggle as ToggleComponent, type toggleVariants } from '@/shared/components/ui/toggle';
-import { cn } from '@/shared/utils/cn-utils';
+import { cn } from '@/shared/utils/cn';
 
 export const ToggleGroupContext: React.Context<VariantProps<typeof toggleVariants>> =
   React.createContext<VariantProps<typeof toggleVariants>>({

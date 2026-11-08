@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 
 import { buttonVariants } from '@/shared/components/ui/button';
-import { cn } from '@/shared/utils/cn-utils';
+import { cn } from '@/shared/utils/cn';
 
 const TOAST_ICONS = {
   error: CircleAlertIcon,
