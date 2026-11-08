@@ -24,17 +24,27 @@
 | Component | PascalCase, named export | `AddToCartButton` |
 | Hook | `use<Thing>` in `hooks/use-<thing>.ts` | `useVariantSelection` |
 | Data function | `get<Thing>` in `data/get-<thing>.ts` | `getProduct` |
-| Server Action | verb + noun in `actions/<verb>-<noun>.action.ts` | `addToCart` in `add-to-cart.action.ts` |
+| Server Action | verb + noun in `actions/<verb>-<noun>.ts` | `addToCart` in `add-to-cart.ts` |
 | Cache tags | `<Module>CacheTags` | `CartCacheTags.Cart` |
 | Vendyx operation | SCREAMING_SNAKE_CASE with `_QUERY`, `_MUTATION` or `_FRAGMENT` suffix | `GET_PRODUCT_QUERY` |
-| Utils | `<topic>.utils.ts` | `price.utils.ts` |
+| Utils | `<topic>-utils.ts` | `price-utils.ts` |
 | Environment variable | SCREAMING_SNAKE_CASE; `NEXT_PUBLIC_` only if the browser needs it | `VENDYX_STOREFRONT_API_KEY` |
+
+- A file's role goes in its name with a hyphen, never with a dot: `price-utils.ts`, `cart-operations.ts`, `cart-errors.ts`. The only dot before the extension is reserved for tests (`price-utils.test.ts`).
 
 ## Exports
 
 - Named exports, no `export default`, except where Next requires it: `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `global-error.tsx`, `template.tsx`, `default.tsx` and `next.config.ts`.
 - Components as `export const X = () => {...}`. Next's files use `export default function Page()`.
-- Props typed with a `type <Component>Props` next to the component, not inline when there are more than two.
+- Props are always typed with a `type Props` in the same file, even when there's only one, never inline. It isn't exported and isn't named after the component.
+
+```tsx
+type Props = {
+  amount: number;
+};
+
+export const Price = ({ amount }: Props) => {...};
+```
 
 ## Components
 

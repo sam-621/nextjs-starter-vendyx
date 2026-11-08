@@ -25,12 +25,12 @@ src/
 ```
 src/lib/<module>/
 ├── data/          get-<thing>.ts, server-only reads (Data Access Layer)
-├── actions/       <action>.action.ts, Server Actions
+├── actions/       <action>.ts, Server Actions
 ├── pages/         <name>-page.tsx, one per route
 ├── components/    <component>/<file>.tsx, grouped by screen or piece
 ├── hooks/         use-<thing>.ts, client hooks
 ├── constants/     cache-tags.ts and module constants
-└── utils/         <topic>.utils.ts, pure functions
+└── utils/         <topic>-utils.ts, pure functions
 ```
 
 A module only creates the folders it uses.
@@ -69,9 +69,9 @@ The Data Access Layer recommended by Next for new projects. It's the only place 
 - Every file starts with `import 'server-only'`.
 - It's the only place that reads `process.env` for Vendyx (`VENDYX_API_URL`, `VENDYX_STOREFRONT_API_KEY`). The API key never reaches the client and never uses the `NEXT_PUBLIC_` prefix.
 - A single `vendyxFetch` sends the GraphQL request with the storefront API key and, when there is one, the customer's access token read from cookies.
-- Operations (`*_QUERY`, `*_MUTATION`, `*_FRAGMENT`) live in `src/lib/vendyx/operations/<domain>.operations.ts`.
+- Operations (`*_QUERY`, `*_MUTATION`, `*_FRAGMENT`) live in `src/lib/vendyx/operations/<domain>-operations.ts`.
 - Responses are mapped to minimal DTOs with only what the storefront uses. Raw API responses don't leave `src/lib/vendyx`.
-- Business errors from the API are translated to a code and a message for the customer in `src/lib/vendyx/errors/<domain>.errors.ts`.
+- Business errors from the API are translated to a code and a message for the customer in `src/lib/vendyx/errors/<domain>-errors.ts`.
 
 ## Reading data
 
@@ -115,7 +115,7 @@ Independent reads start together with `Promise.all`, or in sibling components ea
 
 ## Mutations
 
-Mutations are Server Actions in `src/lib/<module>/actions/<action>.action.ts`, with `'use server'` at the top of the file.
+Mutations are Server Actions in `src/lib/<module>/actions/<action>.ts`, with `'use server'` at the top of the file.
 
 ```ts
 'use server';
