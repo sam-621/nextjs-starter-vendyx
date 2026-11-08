@@ -52,7 +52,7 @@ The template ships the data and actions most shops share. Each shop removes what
 | `cart` | `getCart` | `addToCart`, `updateCartItem`, `removeCartItem`, `applyDiscountCode`, `addCustomerToCart` |
 | `customer` | `getCustomer`, `getCustomerOrders` | `signIn`, `signUp`, `signInWithGoogle`, `signOut`, `requestPasswordReset`, `resetPassword`, `updateCustomer` |
 
-Server-only utilities: `cart/utils/cart-id-utils.ts` (cart cookie), `customer/utils/customer-token-utils.ts` (token cookie) and `customer/utils/customer-guard-utils.ts` (`ensureCustomer`).
+Server-only utilities: `cart/utils/cart-id-utils.ts` (cart cookie), and `customer/utils/customer-token-utils.ts` (token cookie).
 
 The only component the template ships is `shared/components/google-sign-in-button`, because Google's button needs its script.
 
@@ -255,9 +255,9 @@ Vendyx is the identity provider: it stores customers and passwords, verifies Goo
 
 - **Email and password:** `signIn` and `signUp`.
 - **Google:** `GoogleSignInButton` loads Google Identity Services with the shop's own client ID (`NEXT_PUBLIC_GOOGLE_CLIENT_ID`), gets the Google ID token in the browser and passes it to `signInWithGoogle`, which sends it to Vendyx. There's no Google secret. The client ID must be the one configured for the shop in Vendyx, and the shop's domain must be an authorized JavaScript origin of that client in the Google console.
-- **Password reset:** `requestPasswordReset` asks Vendyx to send the email, which links to `<origin><CustomerRoutes.ResetPassword>?token=...`. It answers success even if the email doesn't exist, so it doesn't reveal accounts. `resetPassword` receives `token`, `password` and `confirmPassword`.
+- **Password reset:** `requestPasswordReset` receives `email` and `redirectUrl` (the full URL of the shop's reset page) and asks Vendyx to send the email, which links to `<redirectUrl>?token=...`. `redirectUrl` must have the same origin as the request; otherwise anyone could send a real Vendyx email that hands the token to another site. It answers success even if the email doesn't exist, so it doesn't reveal accounts. `resetPassword` receives `token`, `password` and `confirmPassword`.
 - Every successful sign-in action saves the cookie with `setCustomerToken`. The customer is attached to the cart only when going to checkout, the one place where the cart's customer matters.
-- Routes live in `customer/constants/customer-routes.ts` (`CustomerRoutes`). Each shop sets them to its own pages.
+- `src/lib` doesn't know the shop's routes: whatever needs a URL receives it from `src/app`.
 
 ### Session
 
@@ -267,7 +267,7 @@ Vendyx is the identity provider: it stores customers and passwords, verifies Goo
 ### Authorization
 
 - Vendyx enforces it: `me`, orders and `updateCustomer` only answer to the token's owner. The storefront doesn't decide permissions.
-- Account pages call `ensureCustomer()`, which returns the customer or redirects to `CustomerRoutes.SignIn`.
+- Account pages call `getCustomer()` and, if it's `null`, redirect to the shop's sign-in page themselves.
 - Account actions check the token inside the action, never only in the UI.
 
 ## Checkout
